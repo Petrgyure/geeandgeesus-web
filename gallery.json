@@ -16,13 +16,13 @@
       "src": "img/barber-portrait.jpg",
       "alt": "Barber Gee & Geesus — pánský holič Praha 3",
       "wide": false,
-      "visible": true
+      "visible": false
     },
     {
       "src": "img/owners-front.jpg",
       "alt": "Zakladatelé Gee & Geesus před barbershopem",
       "wide": true,
-      "visible": true
+      "visible": false
     },
     {
       "src": "img/mirror-check.jpg",
@@ -40,7 +40,7 @@
       "src": "img/vibe-drinks.jpg",
       "alt": "Atmosféra v barbershopu Gee & Geesus",
       "wide": false,
-      "visible": true
+      "visible": false
     },
     {
       "src": "img/interior-detail.jpg",
@@ -58,13 +58,13 @@
       "src": "img/barber-work1.jpg",
       "alt": "Barber při práci",
       "wide": false,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/barber-work2.jpg",
       "alt": "Střih v procesu",
       "wide": false,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/barber-work3.jpg",
@@ -100,7 +100,7 @@
       "src": "img/exterior-corner.jpg",
       "alt": "Rohový barbershop na Biskupcově",
       "wide": true,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/owner-portrait.jpg",
@@ -154,7 +154,7 @@
       "src": "img/haircut-process2.jpg",
       "alt": "Střih v procesu 2",
       "wide": false,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/haircut-process3.jpg",
@@ -214,7 +214,7 @@
       "src": "img/products-line.jpg",
       "alt": "Produktová řada Gee & Geesus",
       "wide": false,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/product-detail1.jpg",
@@ -244,13 +244,13 @@
       "src": "img/interior-mirror.jpg",
       "alt": "Zrcadlo v interiéru barbershopu",
       "wide": false,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/hero-exterior.jpg",
       "alt": "Exteriér Gee & Geesus",
       "wide": true,
-      "visible": false
+      "visible": true
     },
     {
       "src": "img/owners-happy.jpg",
