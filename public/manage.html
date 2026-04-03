@@ -114,6 +114,22 @@
         .hero-page-row__thumb { width: 60px; height: 34px; object-fit: cover; border-radius: 4px; }
         .hero-page-row select { flex: 1; padding: 0.35rem 0.5rem; background: #222; border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 0.8rem; }
 
+        /* Upload zone */
+        .upload-zone { border: 2px dashed #444; border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; cursor: pointer; transition: all 0.2s; }
+        .upload-zone:hover, .upload-zone.drag-over { border-color: #888; background: #222; }
+        .upload-zone__text { color: #666; font-size: 0.85rem; }
+        .upload-zone__text strong { color: #999; }
+        .upload-zone input { display: none; }
+        .upload-progress { margin-bottom: 1rem; }
+        .upload-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; background: #222; border-radius: 6px; margin-bottom: 0.4rem; }
+        .upload-item__thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 4px; }
+        .upload-item__name { font-size: 0.8rem; color: #aaa; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .upload-item__status { font-size: 0.7rem; white-space: nowrap; }
+        .upload-item__status--pending { color: #888; }
+        .upload-item__status--uploading { color: #fbbf24; }
+        .upload-item__status--done { color: #4a4; }
+        .upload-item__status--error { color: #f66; }
+
         /* Toast */
         .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #4a4; color: #fff; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.85rem; transition: transform 0.3s ease; z-index: 100; }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -184,6 +200,14 @@
 
     <!-- ===================== GALLERY TAB ===================== -->
     <div class="tab-panel active" id="panel-gallery">
+
+        <!-- Upload zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+            <p class="upload-zone__text"><strong>Přetáhněte fotky sem</strong> nebo klikněte pro výběr<br>JPG, PNG, WebP — max 5 MB na fotku</p>
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple onchange="handleFiles(this.files)">
+        </div>
+        <div class="upload-progress" id="uploadProgress"></div>
+
         <div class="filter-bar">
             <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Vše</button>
             <button class="filter-btn" data-filter="visible" onclick="setFilter('visible')">Viditelné</button>
@@ -679,6 +703,121 @@
                 toast('Chyba: ' + e.message);
                 btn.textContent = 'Publikovat vše na web'; btn.disabled = false;
             }
+        }
+
+        // ===================== PHOTO UPLOAD =====================
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length) handleFiles(files);
+        }
+
+        async function handleFiles(fileList) {
+            const token = getToken();
+            if (!token) { toast('Nastav GitHub token v Nastavení pro nahrávání fotek'); toggleSettings(); return; }
+
+            const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+            if (!files.length) { toast('Vyberte obrázky (JPG, PNG, WebP)'); return; }
+
+            const progress = document.getElementById('uploadProgress');
+            progress.innerHTML = '';
+
+            for (const file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    addUploadItem(progress, file.name, null, 'error', 'Příliš velký (max 5 MB)');
+                    continue;
+                }
+
+                // Clean filename
+                const cleanName = file.name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9._-]/g, '-')
+                    .replace(/-+/g, '-')
+                    .replace(/^-|-$/g, '');
+                const imgPath = `public/img/${cleanName}`;
+                const thumbUrl = URL.createObjectURL(file);
+
+                const item = addUploadItem(progress, cleanName, thumbUrl, 'uploading', 'Nahrávám...');
+
+                try {
+                    // Convert to base64
+                    const base64 = await fileToBase64(file);
+
+                    // Check if file exists
+                    let sha = null;
+                    try {
+                        const check = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${imgPath}`, {
+                            headers: { 'Authorization': `token ${token}` }
+                        });
+                        if (check.ok) {
+                            const existing = await check.json();
+                            sha = existing.sha;
+                        }
+                    } catch (e) { /* file doesn't exist, that's fine */ }
+
+                    // Upload to GitHub
+                    const body = {
+                        message: `admin: upload ${cleanName}`,
+                        content: base64,
+                    };
+                    if (sha) body.sha = sha;
+
+                    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${imgPath}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+
+                    if (!res.ok) throw new Error('Upload selhal');
+
+                    // Add to gallery.json (hidden by default)
+                    const src = `img/${cleanName}`;
+                    if (!photos.find(p => p.src === src)) {
+                        photos.push({ src, alt: cleanName.replace(/\.[^.]+$/, '').replace(/-/g, ' '), wide: false, visible: false });
+                    }
+
+                    updateUploadItem(item, 'done', 'Nahráno!');
+                } catch (e) {
+                    updateUploadItem(item, 'error', e.message || 'Chyba');
+                }
+            }
+
+            // Save updated gallery.json
+            try {
+                await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery after upload');
+                renderGallery();
+                renderHeroPicker();
+                toast(`${files.length} foto nahráno. Zapněte je v galerii.`);
+            } catch (e) {
+                toast('Fotky nahrány, ale gallery.json se nepodařilo uložit.');
+            }
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function addUploadItem(container, name, thumbUrl, status, text) {
+            const div = document.createElement('div');
+            div.className = 'upload-item';
+            div.innerHTML = `
+                ${thumbUrl ? `<img src="${thumbUrl}" class="upload-item__thumb">` : '<div class="upload-item__thumb" style="background:#333"></div>'}
+                <span class="upload-item__name">${name}</span>
+                <span class="upload-item__status upload-item__status--${status}">${text}</span>`;
+            container.appendChild(div);
+            return div;
+        }
+
+        function updateUploadItem(item, status, text) {
+            const el = item.querySelector('.upload-item__status');
+            el.className = `upload-item__status upload-item__status--${status}`;
+            el.textContent = text;
         }
 
         function toast(msg) {
