@@ -158,9 +158,9 @@
         </div>
         <div class="hero__content">
             <img src="img/logo.png" alt="Gee & Geesus" class="hero__logo" width="280" height="233">
-            <h1 class="hero__tagline">Gee &amp; Geesus<span class="sr-only"> — pánský barber Praha 3 Žižkov</span></h1>
-            <p class="hero__sub">Střihy &bull; Vousy &bull; Řeči &bull; Biskupcova 46, Praha 3</p>
-            <a href="#booking" class="btn btn--primary btn--lg">Zarezervovat křeslo</a>
+            <h1 class="hero__tagline" data-content="hero.tagline">Gee &amp; Geesus<span class="sr-only"> — pánský barber Praha 3 Žižkov</span></h1>
+            <p class="hero__sub" data-content="hero.subtitle">Střihy &bull; Vousy &bull; Řeči &bull; Biskupcova 46, Praha 3</p>
+            <a href="#booking" class="btn btn--primary btn--lg" data-content="hero.cta">Zarezervovat křeslo</a>
         </div>
         <a href="#about" class="hero__scroll" aria-label="Scroll down">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
@@ -172,14 +172,14 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">O nás</span>
-                <h2 class="section__title">Kam se chodí pro střih. A zůstává se kvůli lidem.</h2>
+                <h2 class="section__title" data-content="about.title">Kam se chodí pro střih. A zůstává se kvůli lidem.</h2>
             </div>
             <div class="about__grid">
                 <div class="about__image">
                     <img src="img/owners-happy.jpg" alt="Zakladatelé barbershopu Gee & Geesus Praha 3" loading="lazy">
                 </div>
-                <div class="about__text">
-                    <p class="about__lead">Nejsme salón. Nejsme franchise. Jsme dva kluci s břitvou a názorem.</p>
+                <div class="about__text" id="aboutText">
+                    <p class="about__lead" data-content="about.lead">Nejsme salón. Nejsme franchise. Jsme dva kluci s břitvou a názorem.</p>
                     <p>Gee & Geesus je pánský barber na Žižkově, kde se věci řeší na rovinu. Přijdete pro střih nebo úpravu vousů — a odcházíte s pocitem, že jste strávili čas s lidmi, se kterými vás to baví.</p>
                     <p>Spousta našich klientů nechodí jen pro vlasy. Zastaví se na kafe, na řeč, na drink. Proberou víkend, práci, život. Věci, které jinde neřeknete. U nás to jde — protože tenhle prostor jsme stavěli přesně pro tohle.</p>
                     <p>Dřevo na míru od truhláře, společná lavice, kde se potkávají lidi, co by se jinak nepotkali. Pracujeme s naší vlastní řadou <strong>Gee & Geesus</strong> — protože co dáváme na vás, chceme mít pod kontrolou.</p>
@@ -193,9 +193,9 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">Služby</span>
-                <h2 class="section__title">Řemeslo, ne rychlokurs</h2>
+                <h2 class="section__title" data-content="services.title">Řemeslo, ne rychlokurs</h2>
             </div>
-            <div class="services__grid">
+            <div class="services__grid" id="servicesGrid">
                 <div class="service-card">
                     <div class="service-card__icon">
                         <svg viewBox="0 0 64 64" width="48" height="48"><path d="M32 8c-4 0-7 3-7 7v10h14V15c0-4-3-7-7-7zM22 28v4c0 6 4.5 11 10 11s10-5 10-11v-4H22z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M28 48v8M36 48v8M24 56h16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
@@ -253,7 +253,7 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">Galerie</span>
-                <h2 class="section__title">Jak to u nás vypadá</h2>
+                <h2 class="section__title" data-content="gallery.title">Jak to u nás vypadá</h2>
             </div>
             <div class="gallery__grid" id="galleryGrid">
                 <!-- Loaded dynamically from gallery.json -->
@@ -266,8 +266,8 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">Produkty</span>
-                <h2 class="section__title">Naše značka</h2>
-                <p class="section__desc">Co používáme na vás, děláme i pro vás. Vlastní řada péče o vlasy, vousy a pleť — k dostání přímo v barbershopu.</p>
+                <h2 class="section__title" data-content="products.title">Naše značka</h2>
+                <p class="section__desc" data-content="products.desc">Co používáme na vás, děláme i pro vás. Vlastní řada péče o vlasy, vousy a pleť — k dostání přímo v barbershopu.</p>
             </div>
             <div class="products__grid">
                 <div class="product-card">
@@ -289,8 +289,8 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">Rezervace</span>
-                <h2 class="section__title">Tvoje křeslo čeká</h2>
-                <p class="section__desc">Vyber si termin, přijď, sedni si. Zbytek necháš na nás.</p>
+                <h2 class="section__title" data-content="booking.title">Tvoje křeslo čeká</h2>
+                <p class="section__desc" data-content="booking.desc">Vyber si termin, přijď, sedni si. Zbytek necháš na nás.</p>
             </div>
             <div class="booking__embed">
                 <iframe src="https://noona.app/cs/geeandgeesus/book?iframe=true&darkModeDisabled=true&showCancelButton=true" frameborder="0" width="100%" height="600" style="height: 70vh; min-height: 500px; border-radius: 8px;" title="Online rezervace Gee & Geesus" loading="lazy"></iframe>
@@ -303,7 +303,7 @@
         <div class="container">
             <div class="section__header">
                 <span class="section__label" aria-hidden="true">Kontakt</span>
-                <h2 class="section__title">Najdete nás na rohu</h2>
+                <h2 class="section__title" data-content="contact.title">Najdete nás na rohu</h2>
             </div>
             <div class="contact__grid">
                 <div class="contact__info">
@@ -410,6 +410,105 @@
                 }
             });
         });
+
+        // Load content from JSON
+        fetch('content.json')
+            .then(r => r.json())
+            .then(c => {
+                // Simple data-content bindings
+                document.querySelectorAll('[data-content]').forEach(el => {
+                    const keys = el.dataset.content.split('.');
+                    let val = c;
+                    for (const k of keys) val = val?.[k];
+                    if (val != null) {
+                        if (el.dataset.content === 'hero.tagline') {
+                            el.innerHTML = val + '<span class="sr-only"> — pánský barber Praha 3 Žižkov</span>';
+                        } else {
+                            el.innerHTML = val;
+                        }
+                    }
+                });
+                // About paragraphs
+                if (c.about?.paragraphs) {
+                    const box = document.getElementById('aboutText');
+                    if (box) {
+                        const lead = box.querySelector('.about__lead');
+                        box.innerHTML = '';
+                        if (lead) box.appendChild(lead);
+                        c.about.paragraphs.forEach(html => {
+                            const p = document.createElement('p');
+                            p.innerHTML = html;
+                            box.appendChild(p);
+                        });
+                    }
+                }
+                // Services
+                if (c.services?.items) {
+                    const icons = [
+                        '<svg viewBox="0 0 64 64" width="48" height="48"><path d="M32 8c-4 0-7 3-7 7v10h14V15c0-4-3-7-7-7zM22 28v4c0 6 4.5 11 10 11s10-5 10-11v-4H22z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M28 48v8M36 48v8M24 56h16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+                        '<svg viewBox="0 0 64 64" width="48" height="48"><path d="M20 20c0 8 5 16 12 20 7-4 12-12 12-20" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M26 30h12M32 26v8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M32 44v12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+                        '<svg viewBox="0 0 64 64" width="48" height="48"><ellipse cx="32" cy="24" rx="12" ry="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M20 24v8c0 4.4 5.4 8 12 8s12-3.6 12-8v-8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M26 44c0 2 2.7 4 6 4s6-2 6-4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 16c2-4 5-6 8-6s6 2 8 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>',
+                        '<svg viewBox="0 0 64 64" width="48" height="48"><rect x="16" y="12" width="32" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 20h16M24 28h16M24 36h10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M38 36l4 4 6-8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+                    ];
+                    const grid = document.getElementById('servicesGrid');
+                    if (grid) {
+                        grid.innerHTML = '';
+                        c.services.items.forEach((s, i) => {
+                            const card = document.createElement('div');
+                            card.className = 'service-card';
+                            card.innerHTML = `
+                                <div class="service-card__icon">${icons[i] || icons[0]}</div>
+                                <h3 class="service-card__title">${s.name}</h3>
+                                <p class="service-card__desc">${s.desc}</p>
+                                <div class="service-card__meta">
+                                    <span class="service-card__time">${s.time}</span>
+                                    <span class="service-card__price">${s.price}</span>
+                                </div>
+                                <a href="#booking" class="btn btn--outline btn--sm">Rezervovat</a>`;
+                            grid.appendChild(card);
+                        });
+                    }
+                }
+                // Products
+                if (c.products?.items) {
+                    const pgrid = document.querySelector('.products__grid');
+                    if (pgrid) {
+                        pgrid.innerHTML = '';
+                        c.products.items.forEach(p => {
+                            const card = document.createElement('div');
+                            card.className = 'product-card';
+                            card.innerHTML = `
+                                <img src="${p.img}" alt="${p.name}" loading="lazy">
+                                <h3>${p.name}</h3>
+                                <p>${p.desc}</p>`;
+                            pgrid.appendChild(card);
+                        });
+                    }
+                }
+                // Contact
+                if (c.contact) {
+                    const addr = document.querySelector('#contact address');
+                    if (addr && c.contact.address) addr.innerHTML = c.contact.address;
+                    const email = document.querySelector('#contact a[href^="mailto"]');
+                    if (email && c.contact.email) {
+                        email.href = 'mailto:' + c.contact.email;
+                        email.textContent = c.contact.email;
+                    }
+                    const hours = document.querySelector('.hours-table');
+                    if (hours && c.contact.hours) {
+                        hours.innerHTML = c.contact.hours.map(h =>
+                            `<tr><td>${h.days}</td><td>${h.time}</td></tr>`
+                        ).join('');
+                    }
+                    const transport = document.querySelector('#contact .contact__block:last-of-type p');
+                    if (transport && c.contact.transport) transport.innerHTML = c.contact.transport;
+                }
+                // Re-observe for animations
+                document.querySelectorAll('.service-card, .product-card').forEach(el => {
+                    el.classList.add('fade-in');
+                    observer.observe(el);
+                });
+            });
 
         // Intersection Observer for fade-in
         const observer = new IntersectionObserver((entries) => {

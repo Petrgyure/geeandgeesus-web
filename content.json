@@ -1,0 +1,56 @@
+{
+  "hero": {
+    "tagline": "Gee & Geesus",
+    "subtitle": "Střihy • Vousy • Řeči • Biskupcova 46, Praha 3",
+    "cta": "Zarezervovat křeslo"
+  },
+  "about": {
+    "label": "O nás",
+    "title": "Kam se chodí pro střih. A zůstává se kvůli lidem.",
+    "lead": "Nejsme salón. Nejsme franchise. Jsme dva kluci s břitvou a názorem.",
+    "paragraphs": [
+      "Gee & Geesus je pánský barber na Žižkově, kde se věci řeší na rovinu. Přijdete pro střih nebo úpravu vousů — a odcházíte s pocitem, že jste strávili čas s lidmi, se kterými vás to baví.",
+      "Spousta našich klientů nechodí jen pro vlasy. Zastaví se na kafe, na řeč, na drink. Proberou víkend, práci, život. Věci, které jinde neřeknete. U nás to jde — protože tenhle prostor jsme stavěli přesně pro tohle.",
+      "Dřevo na míru od truhláře, společná lavice, kde se potkávají lidi, co by se jinak nepotkali. Pracujeme s naší vlastní řadou <strong>Gee & Geesus</strong> — protože co dáváme na vás, chceme mít pod kontrolou."
+    ]
+  },
+  "services": {
+    "label": "Služby",
+    "title": "Řemeslo, ne rychlokurs",
+    "items": [
+      { "name": "Střih", "desc": "Konzultace, mytí, střih a styling. Odcházíte tak, jak jste si to představovali — nebo líp.", "time": "40 min", "price": "799 Kč" },
+      { "name": "Úprava vousu", "desc": "Tvarování, kontury, péče. Váš vous v rukách někoho, kdo ví, co dělá.", "time": "40 min", "price": "699 Kč" },
+      { "name": "Holení Hot Towel", "desc": "Horký ručník, břitva, klid. Staré řemeslo v čisté formě. Tohle si zasloužíte.", "time": "40 min", "price": "699 Kč" },
+      { "name": "Komplet", "desc": "Střih, holení, vousy — celá hodina jen pro vás. Nejlepší verze, se kterou odejdete.", "time": "60 min", "price": "1 299 Kč" }
+    ]
+  },
+  "gallery": {
+    "label": "Galerie",
+    "title": "Jak to u nás vypadá"
+  },
+  "products": {
+    "label": "Produkty",
+    "title": "Naše značka",
+    "desc": "Co používáme na vás, děláme i pro vás. Vlastní řada péče o vlasy, vousy a pleť — k dostání přímo v barbershopu.",
+    "items": [
+      { "name": "Péče o vlasy & vousy", "desc": "Matná pasta, oleje na vousy, šampony. Vyvinuto pro kluky, co to s péčí myslí vážně.", "img": "img/products-line.jpg" },
+      { "name": "Merch", "desc": "Mikiny, trička, kšiltovky. Limitky, co nekoupíte online. Jen u nás na Biskupcově.", "img": "img/merch-display.jpg" }
+    ]
+  },
+  "booking": {
+    "label": "Rezervace",
+    "title": "Tvoje křeslo čeká",
+    "desc": "Vyber si termin, přijď, sedni si. Zbytek necháš na nás."
+  },
+  "contact": {
+    "label": "Kontakt",
+    "title": "Najdete nás na rohu",
+    "email": "geeandgeesus@gmail.com",
+    "address": "Biskupcova 46<br>Praha 3, 130 00<br>Česká republika",
+    "hours": [
+      { "days": "Pondělí – Pátek", "time": "8:00 – 18:00" },
+      { "days": "Sobota – Neděle", "time": "Zavřeno" }
+    ],
+    "transport": "Tramvaje: 1, 9, 10, 11, 16, 26<br>Zastávky: Biskupcova, Ohrada, Vozovna Žižkov (100 m)<br>Parkování: modré a hnědé zóny v okolí"
+  }
+}

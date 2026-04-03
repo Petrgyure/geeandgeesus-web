@@ -4,385 +4,430 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>G&G — Správa galerie</title>
+    <title>G&G Admin — Správa webu</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: #1a1a1a;
-            color: #d4d4d4;
-            padding: 2rem;
-        }
-        h1 { font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem; }
-        h2 { font-size: 1.1rem; color: #888; margin: 2rem 0 1rem; font-weight: 400; }
-        .help { color: #666; font-size: 0.85rem; margin-bottom: 2rem; line-height: 1.6; }
-        .help strong { color: #aaa; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #1a1a1a; color: #d4d4d4; padding: 1.5rem; }
+        h1 { font-size: 1.5rem; color: #fff; margin-bottom: 0.25rem; }
+        h2 { font-size: 1.1rem; color: #888; margin: 1.5rem 0 0.75rem; font-weight: 400; }
+        h3 { font-size: 0.9rem; color: #aaa; margin: 1rem 0 0.5rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .actions { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .btn {
-            padding: 0.6rem 1.2rem;
-            border: 1px solid #444;
-            background: #2a2a2a;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-        .btn:hover { background: #3a3a3a; border-color: #666; }
-        .btn--primary { background: #fff; color: #1a1a1a; border-color: #fff; }
-        .btn--primary:hover { background: #ccc; }
-        .btn--danger { border-color: #c33; color: #f66; }
-        .btn--danger:hover { background: #c33; color: #fff; }
-        .btn--deploy { background: #2a6; color: #fff; border-color: #2a6; }
-        .btn--deploy:hover { background: #3b7; }
-        .btn--deploy:disabled { background: #555; border-color: #555; color: #888; cursor: wait; }
+        /* Tabs */
+        .tabs { display: flex; gap: 0; margin: 1rem 0 1.5rem; border-bottom: 1px solid #333; }
+        .tab { padding: 0.7rem 1.5rem; background: none; border: none; color: #888; cursor: pointer; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .tab:hover { color: #ccc; }
+        .tab.active { color: #fff; border-bottom-color: #fff; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
 
-        .token-bar {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding: 0.75rem 1rem;
-            background: #222;
-            border: 1px solid #333;
-            border-radius: 8px;
-        }
+        /* Token bar */
+        .token-bar { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; padding: 0.6rem 0.8rem; background: #222; border: 1px solid #333; border-radius: 6px; flex-wrap: wrap; }
         .token-bar label { font-size: 0.8rem; color: #888; white-space: nowrap; }
-        .token-bar input {
-            flex: 1;
-            padding: 0.4rem 0.6rem;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            border-radius: 4px;
-            color: #fff;
-            font-size: 0.8rem;
-            font-family: monospace;
-        }
+        .token-bar input { flex: 1; min-width: 200px; padding: 0.35rem 0.5rem; background: #1a1a1a; border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 0.8rem; font-family: monospace; }
         .token-bar .status { font-size: 0.75rem; white-space: nowrap; }
         .token-bar .status--ok { color: #4a4; }
         .token-bar .status--none { color: #c93; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
-        .card {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 2px solid transparent;
-            cursor: grab;
-            transition: all 0.2s;
-            background: #222;
-        }
+        /* Buttons */
+        .actions { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .btn { padding: 0.55rem 1rem; border: 1px solid #444; background: #2a2a2a; color: #fff; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+        .btn:hover { background: #3a3a3a; border-color: #666; }
+        .btn--primary { background: #fff; color: #1a1a1a; border-color: #fff; }
+        .btn--primary:hover { background: #ccc; }
+        .btn--deploy { background: #2a6; color: #fff; border-color: #2a6; font-size: 0.85rem; padding: 0.6rem 1.5rem; }
+        .btn--deploy:hover { background: #3b7; }
+        .btn--deploy:disabled { background: #555; border-color: #555; color: #888; cursor: wait; }
+        .btn--sm { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+
+        /* Gallery grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; }
+        .card { position: relative; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: grab; transition: all 0.2s; background: #222; }
         .card:active { cursor: grabbing; }
         .card.visible { border-color: #4a4; }
         .card.hidden { opacity: 0.35; border-color: #333; }
         .card.wide { grid-column: span 2; }
-        .card.dragging { opacity: 0.5; transform: scale(0.95); }
+        .card.dragging { opacity: 0.5; }
         .card.drag-over { border-color: #fff; }
-
-        .card img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            display: block;
-        }
+        .card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
         .card.wide img { aspect-ratio: 2/1; }
-
-        .card__controls {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
-        }
-        .card__badge {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-        }
+        .card__controls { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0.4rem; background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent); }
+        .card__badge { font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 3px; font-weight: 600; }
         .card__badge--on { background: #4a4; color: #fff; }
         .card__badge--off { background: #555; color: #999; }
-
-        .card__btns { display: flex; gap: 0.3rem; }
-        .card__btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-        }
+        .card__btns { display: flex; gap: 0.25rem; }
+        .card__btn { width: 26px; height: 26px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
         .card__btn--toggle { background: rgba(255,255,255,0.2); color: #fff; }
         .card__btn--toggle:hover { background: rgba(255,255,255,0.4); }
         .card__btn--wide { background: rgba(100,100,255,0.3); color: #aaf; }
         .card__btn--wide:hover { background: rgba(100,100,255,0.5); }
+        .card__name { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.3rem 0.5rem; background: rgba(0,0,0,0.7); font-size: 0.65rem; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .card__name {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 0.4rem 0.6rem;
-            background: rgba(0,0,0,0.7);
-            font-size: 0.7rem;
-            color: #aaa;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+        .filter-bar { display: flex; gap: 0.4rem; margin-bottom: 0.75rem; }
+        .filter-btn { padding: 0.3rem 0.6rem; border: 1px solid #444; background: transparent; color: #999; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+        .filter-btn.active { background: #444; color: #fff; border-color: #666; }
 
-        .output {
-            margin-top: 2rem;
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 1rem;
-            display: none;
-        }
-        .output pre {
-            color: #8f8;
-            font-size: 0.8rem;
-            white-space: pre-wrap;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .output.is-open { display: block; }
-
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #4a4;
+        /* Content editor */
+        .editor-section { background: #222; border: 1px solid #333; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+        .editor-section__title { font-size: 0.85rem; color: #fff; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 0.5rem; }
+        .editor-section__icon { color: #666; font-size: 1rem; }
+        .field { margin-bottom: 0.75rem; }
+        .field:last-child { margin-bottom: 0; }
+        .field label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .field input, .field textarea {
+            width: 100%;
+            padding: 0.5rem 0.7rem;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 4px;
             color: #fff;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: transform 0.3s ease;
-            z-index: 100;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
         }
+        .field input:focus, .field textarea:focus { border-color: #666; outline: none; }
+        .field textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .field-hint { font-size: 0.7rem; color: #555; margin-top: 0.2rem; }
+
+        .service-editor { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.5rem; }
+        .service-editor__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .service-editor__num { font-size: 0.7rem; color: #666; }
+
+        .product-editor { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.5rem; }
+
+        .hours-editor { display: flex; gap: 0.5rem; margin-bottom: 0.4rem; align-items: center; }
+        .hours-editor input { width: auto; flex: 1; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #4a4; color: #fff; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.85rem; transition: transform 0.3s ease; z-index: 100; }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
-        .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 0.4rem 0.8rem;
-            border: 1px solid #444;
-            background: transparent;
-            color: #999;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        .filter-btn.active { background: #444; color: #fff; border-color: #666; }
+        .preview-link { color: #888; font-size: 0.8rem; text-decoration: none; margin-left: 1rem; }
+        .preview-link:hover { color: #fff; }
     </style>
 </head>
 <body>
-    <h1>Gee & Geesus — Správa galerie</h1>
-    <p class="help">
-        <strong>Zelený rámeček</strong> = fotka je viditelná na webu. Klikni na <strong>oko</strong> pro zobrazení/skrytí.
-        Klikni na <strong>W</strong> pro přepnutí široké fotky. <strong>Přetáhni</strong> fotky pro změnu pořadí.<br>
-        Po úpravách klikni <strong>"Uložit změny"</strong> — stáhne se nový <code>gallery.json</code>, který nahradíš v repozitáři.
-    </p>
+    <h1>Gee & Geesus — Admin <a href="./" class="preview-link" target="_blank">Zobrazit web &rarr;</a></h1>
 
-    <div class="token-bar" id="tokenBar">
+    <div class="token-bar">
         <label>GitHub Token:</label>
         <input type="password" id="tokenInput" placeholder="ghp_xxxx..." oninput="saveToken()">
         <span class="status" id="tokenStatus"></span>
-        <button class="btn" onclick="testToken()" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Test</button>
+        <button class="btn btn--sm" onclick="testToken()">Test</button>
     </div>
 
     <div class="actions">
-        <button class="btn btn--deploy" id="deployBtn" onclick="deploy()">Publikovat na web</button>
-        <button class="btn btn--primary" onclick="saveJSON()">Stáhnout JSON</button>
-        <button class="btn" onclick="showAll()">Zobrazit vše</button>
-        <button class="btn" onclick="hideAll()">Skrýt vše</button>
-        <button class="btn" onclick="toggleOutput()">Zobrazit JSON</button>
+        <button class="btn btn--deploy" id="deployBtn" onclick="deployAll()">Publikovat vše na web</button>
+        <button class="btn" onclick="location.reload()">Obnovit</button>
     </div>
 
-    <div class="filter-bar">
-        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Vše</button>
-        <button class="filter-btn" data-filter="visible" onclick="setFilter('visible')">Viditelné</button>
-        <button class="filter-btn" data-filter="hidden" onclick="setFilter('hidden')">Skryté</button>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('gallery')">Galerie</button>
+        <button class="tab" onclick="switchTab('content')">Texty</button>
     </div>
 
-    <h2>Fotky (<span id="countVisible">0</span> viditelných / <span id="countTotal">0</span> celkem)</h2>
+    <!-- ===================== GALLERY TAB ===================== -->
+    <div class="tab-panel active" id="panel-gallery">
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Vše</button>
+            <button class="filter-btn" data-filter="visible" onclick="setFilter('visible')">Viditelné</button>
+            <button class="filter-btn" data-filter="hidden" onclick="setFilter('hidden')">Skryté</button>
+            <span style="margin-left:auto;font-size:0.8rem;color:#666;"><span id="countVisible">0</span> / <span id="countTotal">0</span></span>
+        </div>
+        <div class="grid" id="grid"></div>
+    </div>
 
-    <div class="grid" id="grid"></div>
+    <!-- ===================== CONTENT TAB ===================== -->
+    <div class="tab-panel" id="panel-content">
 
-    <div class="output" id="output">
-        <pre id="jsonOutput"></pre>
+        <!-- Hero -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9650;</span> Hero</div>
+            <div class="field">
+                <label>Nadpis (H1)</label>
+                <input type="text" data-path="hero.tagline">
+            </div>
+            <div class="field">
+                <label>Podnadpis</label>
+                <input type="text" data-path="hero.subtitle">
+            </div>
+            <div class="field">
+                <label>Tlačítko</label>
+                <input type="text" data-path="hero.cta">
+            </div>
+        </div>
+
+        <!-- About -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9679;</span> O nás</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="about.title">
+            </div>
+            <div class="field">
+                <label>Úvodní věta (tučně)</label>
+                <input type="text" data-path="about.lead">
+            </div>
+            <div id="aboutParagraphs"></div>
+            <button class="btn btn--sm" onclick="addAboutParagraph()" style="margin-top:0.5rem;">+ Přidat odstavec</button>
+        </div>
+
+        <!-- Services -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9733;</span> Služby</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="services.title">
+            </div>
+            <div id="servicesEditor"></div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9634;</span> Galerie</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="gallery.title">
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9670;</span> Produkty</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="products.title">
+            </div>
+            <div class="field">
+                <label>Popis</label>
+                <textarea data-path="products.desc" rows="2"></textarea>
+            </div>
+            <div id="productsEditor"></div>
+        </div>
+
+        <!-- Booking -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9745;</span> Rezervace</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="booking.title">
+            </div>
+            <div class="field">
+                <label>Popis</label>
+                <input type="text" data-path="booking.desc">
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9743;</span> Kontakt</div>
+            <div class="field">
+                <label>Nadpis sekce</label>
+                <input type="text" data-path="contact.title">
+            </div>
+            <div class="field">
+                <label>Email</label>
+                <input type="text" data-path="contact.email">
+            </div>
+            <div class="field">
+                <label>Adresa (HTML — použij &lt;br&gt; pro nový řádek)</label>
+                <textarea data-path="contact.address" rows="2"></textarea>
+            </div>
+            <h3>Otevírací doba</h3>
+            <div id="hoursEditor"></div>
+            <div class="field" style="margin-top:0.5rem;">
+                <label>Doprava (HTML)</label>
+                <textarea data-path="contact.transport" rows="2"></textarea>
+            </div>
+        </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===================== STATE =====================
         let photos = [];
+        let content = {};
         let currentFilter = 'all';
         let dragSrcIdx = null;
+        const REPO_OWNER = 'Petrgyure';
+        const REPO_NAME = 'geeandgeesus-web';
 
-        // Load
-        fetch('gallery.json')
-            .then(r => r.json())
-            .then(data => {
-                photos = data.gallery;
-                render();
-            });
+        // ===================== INIT =====================
+        Promise.all([
+            fetch('gallery.json').then(r => r.json()),
+            fetch('content.json').then(r => r.json())
+        ]).then(([g, c]) => {
+            photos = g.gallery;
+            content = c;
+            renderGallery();
+            renderContentEditor();
+        });
 
-        function render() {
+        // ===================== TABS =====================
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.toLowerCase().includes(name === 'gallery' ? 'galerie' : 'texty')));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + name).classList.add('active');
+        }
+
+        // ===================== GALLERY =====================
+        function renderGallery() {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
-
             const filtered = photos.map((p, i) => ({ ...p, idx: i })).filter(p => {
                 if (currentFilter === 'visible') return p.visible;
                 if (currentFilter === 'hidden') return !p.visible;
                 return true;
             });
-
             filtered.forEach(photo => {
                 const card = document.createElement('div');
                 card.className = 'card ' + (photo.visible ? 'visible' : 'hidden') + (photo.wide ? ' wide' : '');
                 card.draggable = true;
                 card.dataset.idx = photo.idx;
-
                 card.addEventListener('dragstart', onDragStart);
                 card.addEventListener('dragover', onDragOver);
                 card.addEventListener('dragleave', onDragLeave);
                 card.addEventListener('drop', onDrop);
                 card.addEventListener('dragend', onDragEnd);
-
-                const filename = photo.src.split('/').pop();
-
                 card.innerHTML = `
                     <div class="card__controls">
-                        <span class="card__badge ${photo.visible ? 'card__badge--on' : 'card__badge--off'}">
-                            ${photo.visible ? 'ON' : 'OFF'}
-                        </span>
+                        <span class="card__badge ${photo.visible ? 'card__badge--on' : 'card__badge--off'}">${photo.visible ? 'ON' : 'OFF'}</span>
                         <div class="card__btns">
-                            <button class="card__btn card__btn--toggle" title="Zobrazit/Skrýt" onclick="toggleVisible(${photo.idx})">
-                                ${photo.visible ? '👁' : '👁‍🗨'}
-                            </button>
-                            <button class="card__btn card__btn--wide" title="Široká/Normální" onclick="toggleWide(${photo.idx})">
-                                W
-                            </button>
+                            <button class="card__btn card__btn--toggle" onclick="toggleVisible(${photo.idx})">${photo.visible ? '&#128065;' : '&#128065;&#8205;&#128488;'}</button>
+                            <button class="card__btn card__btn--wide" onclick="toggleWide(${photo.idx})">W</button>
                         </div>
                     </div>
                     <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
-                    <div class="card__name">${filename}</div>
-                `;
+                    <div class="card__name">${photo.src.split('/').pop()}</div>`;
                 grid.appendChild(card);
             });
-
-            updateCounts();
-        }
-
-        function toggleVisible(idx) {
-            photos[idx].visible = !photos[idx].visible;
-            render();
-        }
-
-        function toggleWide(idx) {
-            photos[idx].wide = !photos[idx].wide;
-            render();
-        }
-
-        function showAll() {
-            photos.forEach(p => p.visible = true);
-            render();
-            toast('Vše zobrazeno');
-        }
-
-        function hideAll() {
-            photos.forEach(p => p.visible = false);
-            render();
-            toast('Vše skryto');
-        }
-
-        function setFilter(f) {
-            currentFilter = f;
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
-            render();
-        }
-
-        function updateCounts() {
             document.getElementById('countVisible').textContent = photos.filter(p => p.visible).length;
             document.getElementById('countTotal').textContent = photos.length;
         }
 
-        // Drag & Drop reorder
-        function onDragStart(e) {
-            dragSrcIdx = parseInt(e.currentTarget.dataset.idx);
-            e.currentTarget.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
+        function toggleVisible(idx) { photos[idx].visible = !photos[idx].visible; renderGallery(); }
+        function toggleWide(idx) { photos[idx].wide = !photos[idx].wide; renderGallery(); }
+        function setFilter(f) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+            renderGallery();
         }
-        function onDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
-        }
-        function onDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+        function onDragStart(e) { dragSrcIdx = parseInt(e.currentTarget.dataset.idx); e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
+        function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         function onDrop(e) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
-            const targetIdx = parseInt(e.currentTarget.dataset.idx);
-            if (dragSrcIdx !== null && dragSrcIdx !== targetIdx) {
-                const [moved] = photos.splice(dragSrcIdx, 1);
-                photos.splice(targetIdx, 0, moved);
-                render();
-                toast('Pořadí změněno');
-            }
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
+            const t = parseInt(e.currentTarget.dataset.idx);
+            if (dragSrcIdx !== null && dragSrcIdx !== t) { const [m] = photos.splice(dragSrcIdx, 1); photos.splice(t, 0, m); renderGallery(); }
         }
-        function onDragEnd(e) {
-            e.currentTarget.classList.remove('dragging');
-            dragSrcIdx = null;
-        }
+        function onDragEnd(e) { e.currentTarget.classList.remove('dragging'); dragSrcIdx = null; }
 
-        // Save
-        function saveJSON() {
-            const json = JSON.stringify({ gallery: photos }, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'gallery.json';
-            a.click();
-            URL.revokeObjectURL(a.href);
-            toast('gallery.json stažen! Nahraď ho v repozitáři.');
-        }
+        // ===================== CONTENT EDITOR =====================
+        function renderContentEditor() {
+            // Bind simple fields
+            document.querySelectorAll('[data-path]').forEach(el => {
+                const val = getNestedValue(content, el.dataset.path);
+                if (val != null) el.value = val;
+                el.addEventListener('input', () => setNestedValue(content, el.dataset.path, el.value));
+            });
 
-        function toggleOutput() {
-            const el = document.getElementById('output');
-            el.classList.toggle('is-open');
-            if (el.classList.contains('is-open')) {
-                document.getElementById('jsonOutput').textContent = JSON.stringify({ gallery: photos }, null, 2);
-            }
+            // About paragraphs
+            renderAboutParagraphs();
+
+            // Services
+            renderServices();
+
+            // Products
+            renderProducts();
+
+            // Hours
+            renderHours();
         }
 
-        function toast(msg) {
-            const el = document.getElementById('toast');
-            el.textContent = msg;
-            el.classList.add('show');
-            setTimeout(() => el.classList.remove('show'), 2500);
+        function renderAboutParagraphs() {
+            const box = document.getElementById('aboutParagraphs');
+            box.innerHTML = '';
+            (content.about?.paragraphs || []).forEach((text, i) => {
+                const div = document.createElement('div');
+                div.className = 'field';
+                div.innerHTML = `
+                    <label>Odstavec ${i + 1} <button class="btn btn--sm" style="margin-left:0.5rem;color:#f66;border-color:#633;" onclick="removeAboutParagraph(${i})">Smazat</button></label>
+                    <textarea rows="3" oninput="content.about.paragraphs[${i}]=this.value">${text}</textarea>
+                    <div class="field-hint">Můžeš použít &lt;strong&gt;tučně&lt;/strong&gt; pro zvýraznění.</div>`;
+                box.appendChild(div);
+            });
+        }
+        function addAboutParagraph() {
+            if (!content.about.paragraphs) content.about.paragraphs = [];
+            content.about.paragraphs.push('');
+            renderAboutParagraphs();
+        }
+        function removeAboutParagraph(i) {
+            content.about.paragraphs.splice(i, 1);
+            renderAboutParagraphs();
         }
 
-        // === GitHub Deploy ===
-        const REPO_OWNER = 'Petrgyure';
-        const REPO_NAME = 'geeandgeesus-web';
-        const FILE_PATH = 'gallery.json';
+        function renderServices() {
+            const box = document.getElementById('servicesEditor');
+            box.innerHTML = '';
+            (content.services?.items || []).forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = 'service-editor';
+                div.innerHTML = `
+                    <div class="service-editor__header"><span class="service-editor__num">Služba ${i + 1}</span></div>
+                    <div class="field-row">
+                        <div class="field"><label>Název</label><input type="text" value="${esc(s.name)}" oninput="content.services.items[${i}].name=this.value"></div>
+                        <div class="field-row">
+                            <div class="field"><label>Čas</label><input type="text" value="${esc(s.time)}" oninput="content.services.items[${i}].time=this.value"></div>
+                            <div class="field"><label>Cena</label><input type="text" value="${esc(s.price)}" oninput="content.services.items[${i}].price=this.value"></div>
+                        </div>
+                    </div>
+                    <div class="field"><label>Popis</label><textarea rows="2" oninput="content.services.items[${i}].desc=this.value">${esc(s.desc)}</textarea></div>`;
+                box.appendChild(div);
+            });
+        }
 
-        // Token management
+        function renderProducts() {
+            const box = document.getElementById('productsEditor');
+            box.innerHTML = '';
+            (content.products?.items || []).forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'product-editor';
+                div.innerHTML = `
+                    <div class="field-row">
+                        <div class="field"><label>Název</label><input type="text" value="${esc(p.name)}" oninput="content.products.items[${i}].name=this.value"></div>
+                        <div class="field"><label>Obrázek (cesta)</label><input type="text" value="${esc(p.img)}" oninput="content.products.items[${i}].img=this.value"></div>
+                    </div>
+                    <div class="field"><label>Popis</label><textarea rows="2" oninput="content.products.items[${i}].desc=this.value">${esc(p.desc)}</textarea></div>`;
+                box.appendChild(div);
+            });
+        }
+
+        function renderHours() {
+            const box = document.getElementById('hoursEditor');
+            box.innerHTML = '';
+            (content.contact?.hours || []).forEach((h, i) => {
+                const div = document.createElement('div');
+                div.className = 'hours-editor';
+                div.innerHTML = `
+                    <input type="text" value="${esc(h.days)}" oninput="content.contact.hours[${i}].days=this.value" placeholder="Dny">
+                    <input type="text" value="${esc(h.time)}" oninput="content.contact.hours[${i}].time=this.value" placeholder="Čas">`;
+                box.appendChild(div);
+            });
+        }
+
+        // ===================== HELPERS =====================
+        function getNestedValue(obj, path) { return path.split('.').reduce((o, k) => o?.[k], obj); }
+        function setNestedValue(obj, path, val) {
+            const keys = path.split('.');
+            const last = keys.pop();
+            const target = keys.reduce((o, k) => o[k] = o[k] || {}, obj);
+            target[last] = val;
+        }
+        function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+        // ===================== DEPLOY =====================
         function getToken() { return localStorage.getItem('gg_gh_token') || ''; }
         function saveToken() {
             const val = document.getElementById('tokenInput').value.trim();
@@ -393,99 +438,55 @@
             const token = getToken();
             const el = document.getElementById('tokenStatus');
             const btn = document.getElementById('deployBtn');
-            if (token) {
-                el.textContent = 'Token uložen';
-                el.className = 'status status--ok';
-                btn.disabled = false;
-            } else {
-                el.textContent = 'Zadej token';
-                el.className = 'status status--none';
-                btn.disabled = true;
-            }
+            if (token) { el.textContent = 'Token uložen'; el.className = 'status status--ok'; btn.disabled = false; }
+            else { el.textContent = 'Zadej token'; el.className = 'status status--none'; btn.disabled = true; }
         }
-
-        // Init token field
-        (function initToken() {
-            const saved = getToken();
-            if (saved) document.getElementById('tokenInput').value = saved;
-            updateTokenStatus();
-        })();
+        (function() { const s = getToken(); if (s) document.getElementById('tokenInput').value = s; updateTokenStatus(); })();
 
         async function testToken() {
             const token = getToken();
             if (!token) { toast('Zadej GitHub token'); return; }
+            const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, { headers: { 'Authorization': `token ${token}` } });
+            if (res.ok) { toast('Token funguje!'); document.getElementById('tokenStatus').textContent = 'Ověřen'; document.getElementById('tokenStatus').className = 'status status--ok'; }
+            else { toast('Token nefunguje'); document.getElementById('tokenStatus').className = 'status status--none'; }
+        }
+
+        async function pushFile(path, data, msg) {
+            const token = getToken();
+            const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, { headers: { 'Authorization': `token ${token}` } });
+            if (!getRes.ok) throw new Error('Nelze načíst ' + path);
+            const file = await getRes.json();
+            const encoded = btoa(unescape(encodeURIComponent(data)));
+            const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg, content: encoded, sha: file.sha })
+            });
+            if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message); }
+        }
+
+        async function deployAll() {
+            const token = getToken();
+            if (!token) { toast('Zadej token'); return; }
+            const btn = document.getElementById('deployBtn');
+            btn.disabled = true; btn.textContent = 'Publikuji...';
             try {
-                const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
-                if (res.ok) {
-                    toast('Token funguje!');
-                    document.getElementById('tokenStatus').textContent = 'Ověřen';
-                    document.getElementById('tokenStatus').className = 'status status--ok';
-                } else {
-                    toast('Token nefunguje — zkontroluj oprávnění');
-                    document.getElementById('tokenStatus').textContent = 'Neplatný';
-                    document.getElementById('tokenStatus').className = 'status status--none';
-                }
+                await pushFile('gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery');
+                await pushFile('content.json', JSON.stringify(content, null, 2) + '\n', 'admin: update content');
+                toast('Vše publikováno! Web se aktualizuje za ~30s.');
+                btn.textContent = 'Publikováno!';
+                setTimeout(() => { btn.textContent = 'Publikovat vše na web'; btn.disabled = false; }, 3000);
             } catch (e) {
-                toast('Chyba připojení');
+                toast('Chyba: ' + e.message);
+                btn.textContent = 'Publikovat vše na web'; btn.disabled = false;
             }
         }
 
-        async function deploy() {
-            const token = getToken();
-            if (!token) { toast('Nejdřív zadej GitHub token'); return; }
-
-            const btn = document.getElementById('deployBtn');
-            btn.disabled = true;
-            btn.textContent = 'Publikuji...';
-
-            try {
-                // Get current file SHA (needed for update)
-                const getRes = await fetch(
-                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
-                    { headers: { 'Authorization': `token ${token}` } }
-                );
-                if (!getRes.ok) throw new Error('Nelze načíst soubor z GitHubu');
-                const fileData = await getRes.json();
-
-                // Prepare updated content
-                const json = JSON.stringify({ gallery: photos }, null, 2) + '\n';
-                const encoded = btoa(unescape(encodeURIComponent(json)));
-
-                // Push update
-                const putRes = await fetch(
-                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
-                    {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: 'gallery: update from admin panel',
-                            content: encoded,
-                            sha: fileData.sha
-                        })
-                    }
-                );
-
-                if (putRes.ok) {
-                    toast('Publikováno! Web se aktualizuje za ~30s.');
-                    btn.textContent = 'Publikováno!';
-                    setTimeout(() => {
-                        btn.textContent = 'Publikovat na web';
-                        btn.disabled = false;
-                    }, 3000);
-                } else {
-                    const err = await putRes.json();
-                    throw new Error(err.message || 'Chyba při publikování');
-                }
-            } catch (e) {
-                toast('Chyba: ' + e.message);
-                btn.textContent = 'Publikovat na web';
-                btn.disabled = false;
-            }
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
         }
     </script>
 </body>
