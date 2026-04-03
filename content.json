@@ -18,23 +18,51 @@
     "label": "Služby",
     "title": "Řemeslo, ne rychlokurs",
     "items": [
-      { "name": "Střih", "desc": "Konzultace, mytí, střih a styling. Odcházíte tak, jak jste si to představovali — nebo líp.", "time": "40 min", "price": "799 Kč" },
-      { "name": "Úprava vousu", "desc": "Tvarování, kontury, péče. Váš vous v rukách někoho, kdo ví, co dělá.", "time": "40 min", "price": "699 Kč" },
-      { "name": "Holení Hot Towel", "desc": "Horký ručník, břitva, klid. Staré řemeslo v čisté formě. Tohle si zasloužíte.", "time": "40 min", "price": "699 Kč" },
-      { "name": "Komplet", "desc": "Střih, holení, vousy — celá hodina jen pro vás. Nejlepší verze, se kterou odejdete.", "time": "60 min", "price": "1 299 Kč" }
+      {
+        "name": "Střih",
+        "desc": "Konzultace, mytí, střih a styling. Odcházíte tak, jak jste si to představovali — nebo líp.",
+        "time": "40 min",
+        "price": "799 Kč"
+      },
+      {
+        "name": "Úprava vousu",
+        "desc": "Tvarování, kontury, péče. Váš vous v rukách někoho, kdo ví, co dělá.",
+        "time": "40 min",
+        "price": "699 Kč"
+      },
+      {
+        "name": "Holení Hot Towel",
+        "desc": "Horký ručník, břitva, klid. Staré řemeslo v čisté formě. Tohle si zasloužíte.",
+        "time": "40 min",
+        "price": "699 Kč"
+      },
+      {
+        "name": "Komplet",
+        "desc": "Střih, holení, vousy — celá hodina jen pro vás. Nejlepší verze, se kterou odejdete.",
+        "time": "60 min",
+        "price": "1 299 Kč"
+      }
     ]
   },
   "gallery": {
     "label": "Galerie",
-    "title": "Jak to u nás vypadá"
+    "title": "Jak to u nás žije"
   },
   "products": {
     "label": "Produkty",
     "title": "Naše značka",
     "desc": "Co používáme na vás, děláme i pro vás. Vlastní řada péče o vlasy, vousy a pleť — k dostání přímo v barbershopu.",
     "items": [
-      { "name": "Péče o vlasy & vousy", "desc": "Matná pasta, oleje na vousy, šampony. Vyvinuto pro kluky, co to s péčí myslí vážně.", "img": "img/products-line.jpg" },
-      { "name": "Merch", "desc": "Mikiny, trička, kšiltovky. Limitky, co nekoupíte online. Jen u nás na Biskupcově.", "img": "img/merch-display.jpg" }
+      {
+        "name": "Péče o vlasy & vousy",
+        "desc": "Matná pasta, oleje na vousy, šampony. Vyvinuto pro kluky, co to s péčí myslí vážně.",
+        "img": "img/products-line.jpg"
+      },
+      {
+        "name": "Merch",
+        "desc": "Mikiny, trička, kšiltovky. Limitky, co nekoupíte online. Jen u nás na Biskupcově.",
+        "img": "img/merch-display.jpg"
+      }
     ]
   },
   "booking": {
@@ -48,8 +76,14 @@
     "email": "geeandgeesus@gmail.com",
     "address": "Biskupcova 46<br>Praha 3, 130 00<br>Česká republika",
     "hours": [
-      { "days": "Pondělí – Pátek", "time": "8:00 – 18:00" },
-      { "days": "Sobota – Neděle", "time": "Zavřeno" }
+      {
+        "days": "Pondělí – Pátek",
+        "time": "8:00 – 18:00"
+      },
+      {
+        "days": "Sobota – Neděle",
+        "time": "Zavřeno"
+      }
     ],
     "transport": "Tramvaje: 1, 9, 10, 11, 16, 26<br>Zastávky: Biskupcova, Ohrada, Vozovna Žižkov (100 m)<br>Parkování: modré a hnědé zóny v okolí"
   }
