@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gee & Geesus — Prestižní pánský barber | Praha 3 Žižkov</title>
+    <meta name="description" content="Stylový barbershop v srdci Žižkova. Střihy, úprava vousů a hot towel holení v přátelské atmosféře. Tradice a inovace od roku 2019. Biskupcova 46, Praha 3.">
+    <meta name="keywords" content="barber Praha, barbershop Žižkov, pánský holič Praha 3, střih Praha, úprava vousů Praha, hot towel holení, Gee and Geesus">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.geeandgeesus.cz/">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Gee & Geesus — Prestižní pánský barber | Praha 3">
+    <meta property="og:description" content="Stylový barbershop v srdci Žižkova. Tradice, inovace a perfektní péče.">
+    <meta property="og:image" content="https://www.geeandgeesus.cz/img/hero-exterior.jpg">
+    <meta property="og:url" content="https://www.geeandgeesus.cz/">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="cs_CZ">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="img/storefront-art.png">
+    <link rel="apple-touch-icon" href="img/storefront-art.png">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="alternate" hreflang="cs" href="https://www.geeandgeesus.cz/">
+
+    <!-- LocalBusiness Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BarberShop",
+        "name": "Gee & Geesus",
+        "description": "Prestižní pánský barbershop v Praze 3 - Žižkov. Střihy, úprava vousů a hot towel holení.",
+        "url": "https://www.geeandgeesus.cz",
+        "email": "geeandgeesus@gmail.com",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Biskupcova 46",
+            "addressLocality": "Praha 3",
+            "postalCode": "13000",
+            "addressCountry": "CZ"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 50.0875,
+            "longitude": 14.4650
+        },
+        "openingHoursSpecification": [
+            {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                "opens": "08:00",
+                "closes": "18:00"
+            }
+        ],
+        "priceRange": "799–1299 CZK",
+        "image": "https://www.geeandgeesus.cz/img/hero-exterior.jpg",
+        "sameAs": [
+            "https://www.instagram.com/geeandgeesus/",
+            "https://www.facebook.com/geeandgeesus/"
+        ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Služby",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Střih",
+                        "description": "Pánský střih včetně konzultace a stylingu"
+                    },
+                    "price": "799",
+                    "priceCurrency": "CZK"
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Úprava vousu",
+                        "description": "Profesionální úprava a tvarování vousů"
+                    },
+                    "price": "699",
+                    "priceCurrency": "CZK"
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Holení Hot Towel",
+                        "description": "Klasické holení s horkým ručníkem"
+                    },
+                    "price": "699",
+                    "priceCurrency": "CZK"
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Komplet",
+                        "description": "Střih, holení a úprava vousů v jednom"
+                    },
+                    "price": "1299",
+                    "priceCurrency": "CZK"
+                }
+            ]
+        }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav__inner">
+            <a href="#hero" class="nav__logo">
+                <img src="img/logo.png" alt="Gee & Geesus" width="120" height="40">
+            </a>
+            <ul class="nav__links">
+                <li><a href="#about">O nás</a></li>
+                <li><a href="#services">Služby</a></li>
+                <li><a href="#gallery">Galerie</a></li>
+                <li><a href="#products">Produkty</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+            <a href="#booking" class="btn btn--nav">Rezervovat</a>
+            <button class="nav__hamburger" aria-label="Menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <ul class="mobile-menu__links">
+            <li><a href="#about">O nás</a></li>
+            <li><a href="#services">Služby</a></li>
+            <li><a href="#gallery">Galerie</a></li>
+            <li><a href="#products">Produkty</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+            <li><a href="#booking" class="btn btn--primary btn--full">Rezervovat</a></li>
+        </ul>
+    </div>
+
+    <main>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero__bg">
+            <video autoplay muted loop playsinline poster="img/hero-exterior.jpg" width="1920" height="1080">
+                <source src="img/hero-video.mp4" type="video/mp4">
+            </video>
+            <div class="hero__overlay"></div>
+        </div>
+        <div class="hero__content">
+            <img src="img/logo.png" alt="Gee & Geesus" class="hero__logo" width="280" height="233">
+            <h1 class="hero__tagline">Prestižní pánský barber<span class="sr-only"> Gee &amp; Geesus Praha 3 Žižkov</span></h1>
+            <p class="hero__sub">Biskupcova 46 &bull; Praha 3 &bull; Žižkov</p>
+            <a href="#booking" class="btn btn--primary btn--lg">Rezervovat termín</a>
+        </div>
+        <a href="#about" class="hero__scroll" aria-label="Scroll down">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+        </a>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">O nás</span>
+                <h2 class="section__title">Tradice &amp; Inovace</h2>
+            </div>
+            <div class="about__grid">
+                <div class="about__image">
+                    <img src="img/owners-happy.jpg" alt="Zakladatelé Gee & Geesus" loading="lazy">
+                </div>
+                <div class="about__text">
+                    <p class="about__lead">Jsme dva normální kluci, kteří dělají věci po svém.</p>
+                    <p>Gee & Geesus vznikl z lásky k řemeslu a touhy vytvořit místo, kde se potkává oldschool barbering s moderním přístupem. U nás nejde jen o střih — jde o zážitek, atmosféru a pocit, že jste v těch nejlepších rukou.</p>
+                    <p>Náš prostor jsme navrhli s důrazem na přírodní materiály, jednoduchost a kvalitu. Nábytek na míru od zkušeného truhláře, společná lavice pro čekající, kde se rodí ty nejlepší konverzace.</p>
+                    <p>Používáme výhradně produkty <strong>REUZEL</strong> a naši vlastní řadu <strong>Gee & Geesus</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section section--dark" id="services">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">Služby</span>
+                <h2 class="section__title">Co pro vás děláme</h2>
+            </div>
+            <div class="services__grid">
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48"><path d="M32 8c-4 0-7 3-7 7v10h14V15c0-4-3-7-7-7zM22 28v4c0 6 4.5 11 10 11s10-5 10-11v-4H22z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M28 48v8M36 48v8M24 56h16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3 class="service-card__title">Střih</h3>
+                    <p class="service-card__desc">Pánský střih včetně konzultace, mytí a stylingu.</p>
+                    <div class="service-card__meta">
+                        <span class="service-card__time">40 min</span>
+                        <span class="service-card__price">799 Kč</span>
+                    </div>
+                    <a href="#booking" class="btn btn--outline btn--sm">Rezervovat</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48"><path d="M20 20c0 8 5 16 12 20 7-4 12-12 12-20" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M26 30h12M32 26v8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M32 44v12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3 class="service-card__title">Úprava vousu</h3>
+                    <p class="service-card__desc">Profesionální tvarování a úprava vousů, péče o kontury.</p>
+                    <div class="service-card__meta">
+                        <span class="service-card__time">40 min</span>
+                        <span class="service-card__price">699 Kč</span>
+                    </div>
+                    <a href="#booking" class="btn btn--outline btn--sm">Rezervovat</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48"><ellipse cx="32" cy="24" rx="12" ry="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M20 24v8c0 4.4 5.4 8 12 8s12-3.6 12-8v-8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M26 44c0 2 2.7 4 6 4s6-2 6-4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 16c2-4 5-6 8-6s6 2 8 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3 class="service-card__title">Holení Hot Towel</h3>
+                    <p class="service-card__desc">Klasické holení břitvou s horkým ručníkem. Rituál, ne rutina.</p>
+                    <div class="service-card__meta">
+                        <span class="service-card__time">40 min</span>
+                        <span class="service-card__price">699 Kč</span>
+                    </div>
+                    <a href="#booking" class="btn btn--outline btn--sm">Rezervovat</a>
+                </div>
+                <div class="service-card">
+                    <div class="service-card__icon">
+                        <svg viewBox="0 0 64 64" width="48" height="48"><rect x="16" y="12" width="32" height="40" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 20h16M24 28h16M24 36h10" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M38 36l4 4 6-8" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3 class="service-card__title">Komplet</h3>
+                    <p class="service-card__desc">Střih, holení a úprava vousů — kompletní péče v jednom sezení.</p>
+                    <div class="service-card__meta">
+                        <span class="service-card__time">60 min</span>
+                        <span class="service-card__price">1 299 Kč</span>
+                    </div>
+                    <a href="#booking" class="btn btn--outline btn--sm">Rezervovat</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="section" id="gallery">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">Galerie</span>
+                <h2 class="section__title">Náš svět</h2>
+            </div>
+            <div class="gallery__grid">
+                <div class="gallery__item gallery__item--wide">
+                    <img src="img/interior-wide.jpg" alt="Interiér barbershopu Gee & Geesus na Žižkově v Praze 3" width="800" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/beard-trim.jpg" alt="Profesionální úprava vousů v barbershopu Gee & Geesus Praha" width="400" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/barber-portrait.jpg" alt="Barber Gee & Geesus — pánský holič Praha 3 Žižkov" width="400" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item gallery__item--wide">
+                    <img src="img/owners-front.jpg" alt="Zakladatelé barbershopu Gee & Geesus před provozovnou na Biskupcově" width="800" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/mirror-check.jpg" alt="Kontrola pánského střihu v barbershopu Praha 3" width="400" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/haircut-result.jpg" alt="Výsledek střihu v Gee & Geesus barbershop Žižkov" width="400" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/vibe-drinks.jpg" alt="Přátelská atmosféra v barbershopu Gee & Geesus" width="400" height="400" loading="lazy">
+                </div>
+                <div class="gallery__item">
+                    <img src="img/interior-detail.jpg" alt="Detail interiéru barbershopu s přírodními materiály" width="400" height="400" loading="lazy">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="section section--dark" id="products">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">Produkty</span>
+                <h2 class="section__title">Gee & Geesus Care</h2>
+                <p class="section__desc">Vlastní řada produktů pro péči o vlasy, vousy a pleť. K dostání přímo v barbershopu.</p>
+            </div>
+            <div class="products__grid">
+                <div class="product-card">
+                    <img src="img/products-line.jpg" alt="Gee & Geesus produktová řada" loading="lazy">
+                    <h3>Péče o vlasy &amp; vousy</h3>
+                    <p>Matná pasta na vlasy, oleje na vousy a další — vyvinuto přímo pro naše klienty.</p>
+                </div>
+                <div class="product-card">
+                    <img src="img/merch-display.jpg" alt="Gee & Geesus merch" loading="lazy">
+                    <h3>Merch kolekce</h3>
+                    <p>Mikiny, trička a kšiltovky s logem G&G. Limitované edice přímo z barbershopu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking -->
+    <section class="section section--cta" id="booking">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">Rezervace</span>
+                <h2 class="section__title">Připraven na změnu?</h2>
+                <p class="section__desc">Vyber si termín online — rychle a jednoduše.</p>
+            </div>
+            <div class="booking__embed">
+                <iframe src="https://noona.app/cs/geeandgeesus/book?iframe=true&darkModeDisabled=true&showCancelButton=true" frameborder="0" width="100%" height="600" style="height: 70vh; min-height: 500px; border-radius: 8px;" title="Online rezervace Gee & Geesus" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+        <div class="container">
+            <div class="section__header">
+                <span class="section__label" aria-hidden="true">Kontakt</span>
+                <h2 class="section__title">Kde nás najdete</h2>
+            </div>
+            <div class="contact__grid">
+                <div class="contact__info">
+                    <div class="contact__block">
+                        <h3>Adresa</h3>
+                        <address>Biskupcova 46<br>Praha 3, 130 00<br>Česká republika</address>
+                    </div>
+                    <div class="contact__block">
+                        <h3>Otevírací doba</h3>
+                        <table class="hours-table">
+                            <tr><td>Pondělí – Pátek</td><td>8:00 – 18:00</td></tr>
+                            <tr><td>Sobota – Neděle</td><td>Zavřeno</td></tr>
+                        </table>
+                    </div>
+                    <div class="contact__block">
+                        <h3>Kontakt</h3>
+                        <p><a href="mailto:geeandgeesus@gmail.com">geeandgeesus@gmail.com</a></p>
+                    </div>
+                    <div class="contact__block">
+                        <h3>Doprava</h3>
+                        <p>Tramvaje: 1, 9, 10, 11, 16, 26<br>
+                        Zastávky: Biskupcova, Ohrada, Vozovna Žižkov (100 m)<br>
+                        Parkování: modré a hnědé zóny v okolí</p>
+                    </div>
+                    <div class="contact__social">
+                        <a href="https://www.instagram.com/geeandgeesus/" target="_blank" rel="noopener" aria-label="Instagram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        </a>
+                        <a href="https://www.facebook.com/geeandgeesus/" target="_blank" rel="noopener" aria-label="Facebook">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact__map">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2559.8!2d14.4625!3d50.0875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470b94a0f0c0c0c1%3A0x0!2sBiskupcova%2046%2C%20130%2000%20Praha%203!5e0!3m2!1scs!2scz!4v1"
+                        width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Mapa – Gee & Geesus barbershop">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer__inner">
+            <img src="img/logo.png" alt="Gee & Geesus" class="footer__logo" width="100" height="36">
+            <p>&copy; 2026 Gee & Geesus. Všechna práva vyhrazena.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky CTA -->
+    <div class="mobile-cta" id="mobileCta">
+        <a href="#booking" class="btn btn--primary btn--full">Rezervovat online</a>
+    </div>
+
+    <script>
+        // Navbar scroll effect + mobile CTA
+        const nav = document.getElementById('nav');
+        const mobileCta = document.getElementById('mobileCta');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('nav--scrolled', window.scrollY > 50);
+            if (mobileCta) {
+                mobileCta.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.8);
+            }
+        });
+
+        // Mobile menu
+        const hamburger = document.querySelector('.nav__hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        hamburger.addEventListener('click', () => {
+            const isOpen = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', !isOpen);
+            hamburger.classList.toggle('is-active');
+            mobileMenu.classList.toggle('is-open');
+            document.body.classList.toggle('no-scroll');
+        });
+
+        // Close mobile menu on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.setAttribute('aria-expanded', 'false');
+                hamburger.classList.remove('is-active');
+                mobileMenu.classList.remove('is-open');
+                document.body.classList.remove('no-scroll');
+            });
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.section__header, .about__image, .about__text, .service-card, .gallery__item, .product-card, .contact__info, .contact__map').forEach(el => {
+            el.classList.add('fade-in');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
