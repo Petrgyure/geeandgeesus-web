@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>G&G — Správa galerie</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: #d4d4d4;
+            padding: 2rem;
+        }
+        h1 { font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.1rem; color: #888; margin: 2rem 0 1rem; font-weight: 400; }
+        .help { color: #666; font-size: 0.85rem; margin-bottom: 2rem; line-height: 1.6; }
+        .help strong { color: #aaa; }
+
+        .actions { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #444;
+            background: #2a2a2a;
+            color: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: #3a3a3a; border-color: #666; }
+        .btn--primary { background: #fff; color: #1a1a1a; border-color: #fff; }
+        .btn--primary:hover { background: #ccc; }
+        .btn--danger { border-color: #c33; color: #f66; }
+        .btn--danger:hover { background: #c33; color: #fff; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: grab;
+            transition: all 0.2s;
+            background: #222;
+        }
+        .card:active { cursor: grabbing; }
+        .card.visible { border-color: #4a4; }
+        .card.hidden { opacity: 0.35; border-color: #333; }
+        .card.wide { grid-column: span 2; }
+        .card.dragging { opacity: 0.5; transform: scale(0.95); }
+        .card.drag-over { border-color: #fff; }
+
+        .card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block;
+        }
+        .card.wide img { aspect-ratio: 2/1; }
+
+        .card__controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+        }
+        .card__badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .card__badge--on { background: #4a4; color: #fff; }
+        .card__badge--off { background: #555; color: #999; }
+
+        .card__btns { display: flex; gap: 0.3rem; }
+        .card__btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+        .card__btn--toggle { background: rgba(255,255,255,0.2); color: #fff; }
+        .card__btn--toggle:hover { background: rgba(255,255,255,0.4); }
+        .card__btn--wide { background: rgba(100,100,255,0.3); color: #aaf; }
+        .card__btn--wide:hover { background: rgba(100,100,255,0.5); }
+
+        .card__name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.4rem 0.6rem;
+            background: rgba(0,0,0,0.7);
+            font-size: 0.7rem;
+            color: #aaa;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .output {
+            margin-top: 2rem;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            display: none;
+        }
+        .output pre {
+            color: #8f8;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .output.is-open { display: block; }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #4a4;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        .filter-bar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 0.4rem 0.8rem;
+            border: 1px solid #444;
+            background: transparent;
+            color: #999;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .filter-btn.active { background: #444; color: #fff; border-color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Gee & Geesus — Správa galerie</h1>
+    <p class="help">
+        <strong>Zelený rámeček</strong> = fotka je viditelná na webu. Klikni na <strong>oko</strong> pro zobrazení/skrytí.
+        Klikni na <strong>W</strong> pro přepnutí široké fotky. <strong>Přetáhni</strong> fotky pro změnu pořadí.<br>
+        Po úpravách klikni <strong>"Uložit změny"</strong> — stáhne se nový <code>gallery.json</code>, který nahradíš v repozitáři.
+    </p>
+
+    <div class="actions">
+        <button class="btn btn--primary" onclick="saveJSON()">Uložit změny (stáhnout JSON)</button>
+        <button class="btn" onclick="showAll()">Zobrazit vše</button>
+        <button class="btn" onclick="hideAll()">Skrýt vše</button>
+        <button class="btn" onclick="toggleOutput()">Zobrazit JSON</button>
+    </div>
+
+    <div class="filter-bar">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">Vše</button>
+        <button class="filter-btn" data-filter="visible" onclick="setFilter('visible')">Viditelné</button>
+        <button class="filter-btn" data-filter="hidden" onclick="setFilter('hidden')">Skryté</button>
+    </div>
+
+    <h2>Fotky (<span id="countVisible">0</span> viditelných / <span id="countTotal">0</span> celkem)</h2>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="output" id="output">
+        <pre id="jsonOutput"></pre>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let photos = [];
+        let currentFilter = 'all';
+        let dragSrcIdx = null;
+
+        // Load
+        fetch('gallery.json')
+            .then(r => r.json())
+            .then(data => {
+                photos = data.gallery;
+                render();
+            });
+
+        function render() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+
+            const filtered = photos.map((p, i) => ({ ...p, idx: i })).filter(p => {
+                if (currentFilter === 'visible') return p.visible;
+                if (currentFilter === 'hidden') return !p.visible;
+                return true;
+            });
+
+            filtered.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'card ' + (photo.visible ? 'visible' : 'hidden') + (photo.wide ? ' wide' : '');
+                card.draggable = true;
+                card.dataset.idx = photo.idx;
+
+                card.addEventListener('dragstart', onDragStart);
+                card.addEventListener('dragover', onDragOver);
+                card.addEventListener('dragleave', onDragLeave);
+                card.addEventListener('drop', onDrop);
+                card.addEventListener('dragend', onDragEnd);
+
+                const filename = photo.src.split('/').pop();
+
+                card.innerHTML = `
+                    <div class="card__controls">
+                        <span class="card__badge ${photo.visible ? 'card__badge--on' : 'card__badge--off'}">
+                            ${photo.visible ? 'ON' : 'OFF'}
+                        </span>
+                        <div class="card__btns">
+                            <button class="card__btn card__btn--toggle" title="Zobrazit/Skrýt" onclick="toggleVisible(${photo.idx})">
+                                ${photo.visible ? '👁' : '👁‍🗨'}
+                            </button>
+                            <button class="card__btn card__btn--wide" title="Široká/Normální" onclick="toggleWide(${photo.idx})">
+                                W
+                            </button>
+                        </div>
+                    </div>
+                    <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
+                    <div class="card__name">${filename}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            updateCounts();
+        }
+
+        function toggleVisible(idx) {
+            photos[idx].visible = !photos[idx].visible;
+            render();
+        }
+
+        function toggleWide(idx) {
+            photos[idx].wide = !photos[idx].wide;
+            render();
+        }
+
+        function showAll() {
+            photos.forEach(p => p.visible = true);
+            render();
+            toast('Vše zobrazeno');
+        }
+
+        function hideAll() {
+            photos.forEach(p => p.visible = false);
+            render();
+            toast('Vše skryto');
+        }
+
+        function setFilter(f) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
+            render();
+        }
+
+        function updateCounts() {
+            document.getElementById('countVisible').textContent = photos.filter(p => p.visible).length;
+            document.getElementById('countTotal').textContent = photos.length;
+        }
+
+        // Drag & Drop reorder
+        function onDragStart(e) {
+            dragSrcIdx = parseInt(e.currentTarget.dataset.idx);
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function onDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+        function onDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function onDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const targetIdx = parseInt(e.currentTarget.dataset.idx);
+            if (dragSrcIdx !== null && dragSrcIdx !== targetIdx) {
+                const [moved] = photos.splice(dragSrcIdx, 1);
+                photos.splice(targetIdx, 0, moved);
+                render();
+                toast('Pořadí změněno');
+            }
+        }
+        function onDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+            dragSrcIdx = null;
+        }
+
+        // Save
+        function saveJSON() {
+            const json = JSON.stringify({ gallery: photos }, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'gallery.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            toast('gallery.json stažen! Nahraď ho v repozitáři.');
+        }
+
+        function toggleOutput() {
+            const el = document.getElementById('output');
+            el.classList.toggle('is-open');
+            if (el.classList.contains('is-open')) {
+                document.getElementById('jsonOutput').textContent = JSON.stringify({ gallery: photos }, null, 2);
+            }
+        }
+
+        function toast(msg) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
