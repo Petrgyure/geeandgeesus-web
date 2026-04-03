@@ -4,16 +4,18 @@
    =========================== */
 
 :root {
-    --color-bg: #0a0a0a;
-    --color-bg-alt: #161616;
-    --color-bg-card: #1e1e1e;
+    --color-bg: #1a1a1a;
+    --color-bg-alt: #252525;
+    --color-bg-card: #2e2e2e;
     --color-text: #d4d4d4;
-    --color-text-muted: #888888;
+    --color-text-muted: #999999;
     --color-accent: #ffffff;
     --color-accent-hover: #cccccc;
     --color-white: #ffffff;
-    --color-border: #2a2a2a;
+    --color-border: #3a3a3a;
     --color-anthracite: #3a3a3a;
+    --color-anthracite-dark: #2a2a2a;
+    --color-anthracite-light: #4a4a4a;
 
     --font-heading: 'Bebas Neue', sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -62,10 +64,10 @@ a:hover { color: var(--color-accent-hover); }
     transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .nav--scrolled {
-    background: rgba(42, 42, 42, 0.95);
+    background: rgba(50, 50, 50, 0.97);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 1px 0 var(--color-border);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 .nav__inner {
     max-width: var(--container-max);
@@ -130,7 +132,7 @@ a:hover { color: var(--color-accent-hover); }
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 15, 15, 0.98);
+    background: rgba(30, 30, 30, 0.98);
     z-index: 99;
     display: flex;
     align-items: center;
@@ -232,9 +234,9 @@ a:hover { color: var(--color-accent-hover); }
     inset: 0;
     background: linear-gradient(
         to bottom,
-        rgba(15, 15, 15, 0.5) 0%,
-        rgba(15, 15, 15, 0.7) 50%,
-        rgba(15, 15, 15, 0.9) 100%
+        rgba(26, 26, 26, 0.4) 0%,
+        rgba(35, 35, 35, 0.6) 50%,
+        rgba(26, 26, 26, 0.92) 100%
     );
 }
 .hero__content {
@@ -466,7 +468,7 @@ a:hover { color: var(--color-accent-hover); }
    CTA Section
    =========================== */
 .section--cta {
-    background: linear-gradient(135deg, var(--color-bg-alt) 0%, #1a1a1a 50%, var(--color-anthracite) 100%);
+    background: linear-gradient(135deg, var(--color-bg-alt) 0%, #333333 50%, var(--color-anthracite-light) 100%);
     text-align: center;
     padding: 5rem 0;
 }
@@ -639,7 +641,7 @@ address {
     z-index: 90;
     padding: 0.75rem 1rem;
     padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
-    background: rgba(10, 10, 10, 0.95);
+    background: rgba(35, 35, 35, 0.97);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid var(--color-border);
