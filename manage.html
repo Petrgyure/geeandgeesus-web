@@ -34,6 +34,34 @@
         .btn--primary:hover { background: #ccc; }
         .btn--danger { border-color: #c33; color: #f66; }
         .btn--danger:hover { background: #c33; color: #fff; }
+        .btn--deploy { background: #2a6; color: #fff; border-color: #2a6; }
+        .btn--deploy:hover { background: #3b7; }
+        .btn--deploy:disabled { background: #555; border-color: #555; color: #888; cursor: wait; }
+
+        .token-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem 1rem;
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        .token-bar label { font-size: 0.8rem; color: #888; white-space: nowrap; }
+        .token-bar input {
+            flex: 1;
+            padding: 0.4rem 0.6rem;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+        .token-bar .status { font-size: 0.75rem; white-space: nowrap; }
+        .token-bar .status--ok { color: #4a4; }
+        .token-bar .status--none { color: #c93; }
 
         .grid {
             display: grid;
@@ -168,8 +196,16 @@
         Po úpravách klikni <strong>"Uložit změny"</strong> — stáhne se nový <code>gallery.json</code>, který nahradíš v repozitáři.
     </p>
 
+    <div class="token-bar" id="tokenBar">
+        <label>GitHub Token:</label>
+        <input type="password" id="tokenInput" placeholder="ghp_xxxx..." oninput="saveToken()">
+        <span class="status" id="tokenStatus"></span>
+        <button class="btn" onclick="testToken()" style="padding:0.3rem 0.6rem;font-size:0.75rem;">Test</button>
+    </div>
+
     <div class="actions">
-        <button class="btn btn--primary" onclick="saveJSON()">Uložit změny (stáhnout JSON)</button>
+        <button class="btn btn--deploy" id="deployBtn" onclick="deploy()">Publikovat na web</button>
+        <button class="btn btn--primary" onclick="saveJSON()">Stáhnout JSON</button>
         <button class="btn" onclick="showAll()">Zobrazit vše</button>
         <button class="btn" onclick="hideAll()">Skrýt vše</button>
         <button class="btn" onclick="toggleOutput()">Zobrazit JSON</button>
@@ -339,6 +375,117 @@
             el.textContent = msg;
             el.classList.add('show');
             setTimeout(() => el.classList.remove('show'), 2500);
+        }
+
+        // === GitHub Deploy ===
+        const REPO_OWNER = 'Petrgyure';
+        const REPO_NAME = 'geeandgeesus-web';
+        const FILE_PATH = 'gallery.json';
+
+        // Token management
+        function getToken() { return localStorage.getItem('gg_gh_token') || ''; }
+        function saveToken() {
+            const val = document.getElementById('tokenInput').value.trim();
+            if (val) localStorage.setItem('gg_gh_token', val);
+            updateTokenStatus();
+        }
+        function updateTokenStatus() {
+            const token = getToken();
+            const el = document.getElementById('tokenStatus');
+            const btn = document.getElementById('deployBtn');
+            if (token) {
+                el.textContent = 'Token uložen';
+                el.className = 'status status--ok';
+                btn.disabled = false;
+            } else {
+                el.textContent = 'Zadej token';
+                el.className = 'status status--none';
+                btn.disabled = true;
+            }
+        }
+
+        // Init token field
+        (function initToken() {
+            const saved = getToken();
+            if (saved) document.getElementById('tokenInput').value = saved;
+            updateTokenStatus();
+        })();
+
+        async function testToken() {
+            const token = getToken();
+            if (!token) { toast('Zadej GitHub token'); return; }
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (res.ok) {
+                    toast('Token funguje!');
+                    document.getElementById('tokenStatus').textContent = 'Ověřen';
+                    document.getElementById('tokenStatus').className = 'status status--ok';
+                } else {
+                    toast('Token nefunguje — zkontroluj oprávnění');
+                    document.getElementById('tokenStatus').textContent = 'Neplatný';
+                    document.getElementById('tokenStatus').className = 'status status--none';
+                }
+            } catch (e) {
+                toast('Chyba připojení');
+            }
+        }
+
+        async function deploy() {
+            const token = getToken();
+            if (!token) { toast('Nejdřív zadej GitHub token'); return; }
+
+            const btn = document.getElementById('deployBtn');
+            btn.disabled = true;
+            btn.textContent = 'Publikuji...';
+
+            try {
+                // Get current file SHA (needed for update)
+                const getRes = await fetch(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
+                    { headers: { 'Authorization': `token ${token}` } }
+                );
+                if (!getRes.ok) throw new Error('Nelze načíst soubor z GitHubu');
+                const fileData = await getRes.json();
+
+                // Prepare updated content
+                const json = JSON.stringify({ gallery: photos }, null, 2) + '\n';
+                const encoded = btoa(unescape(encodeURIComponent(json)));
+
+                // Push update
+                const putRes = await fetch(
+                    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: 'gallery: update from admin panel',
+                            content: encoded,
+                            sha: fileData.sha
+                        })
+                    }
+                );
+
+                if (putRes.ok) {
+                    toast('Publikováno! Web se aktualizuje za ~30s.');
+                    btn.textContent = 'Publikováno!';
+                    setTimeout(() => {
+                        btn.textContent = 'Publikovat na web';
+                        btn.disabled = false;
+                    }, 3000);
+                } else {
+                    const err = await putRes.json();
+                    throw new Error(err.message || 'Chyba při publikování');
+                }
+            } catch (e) {
+                toast('Chyba: ' + e.message);
+                btn.textContent = 'Publikovat na web';
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
