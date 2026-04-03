@@ -2,7 +2,19 @@
   "hero": {
     "tagline": "Gee & Geesus",
     "subtitle": "Střihy • Vousy • Řeči • Biskupcova 46, Praha 3",
-    "cta": "Zarezervovat křeslo"
+    "cta": "Zarezervovat křeslo",
+    "image": "img/hero-exterior.jpg",
+    "video": "img/hero-video.mp4"
+  },
+  "heroes": {
+    "home": { "image": "img/hero-exterior.jpg", "video": "img/hero-video.mp4" },
+    "sluzby": { "image": "img/interior-wide.jpg" },
+    "o-nas": { "image": "img/owners-front.jpg" },
+    "galerie": { "image": "img/interior-wide.jpg" },
+    "produkty": { "image": "img/products-line.jpg" },
+    "rezervace": { "image": "img/exterior-corner.jpg" },
+    "kontakt": { "image": "img/exterior-full.jpg" },
+    "blog": { "image": "img/vibe-drinks.jpg" }
   },
   "about": {
     "label": "O nás",

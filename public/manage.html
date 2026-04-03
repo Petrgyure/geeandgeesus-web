@@ -98,6 +98,22 @@
         .hours-editor { display: flex; gap: 0.5rem; margin-bottom: 0.4rem; align-items: center; }
         .hours-editor input { width: auto; flex: 1; }
 
+        /* Hero image picker */
+        .hero-picker { margin-top: 0.75rem; }
+        .hero-picker__label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .hero-picker__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem; }
+        .hero-picker__item { position: relative; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .hero-picker__item.selected { border-color: #4a4; }
+        .hero-picker__item:hover { border-color: #666; }
+        .hero-picker__item img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+        .hero-picker__item .check { position: absolute; top: 4px; right: 4px; background: #4a4; color: #fff; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; display: none; align-items: center; justify-content: center; }
+        .hero-picker__item.selected .check { display: flex; }
+        .hero-pages { margin-top: 1rem; }
+        .hero-page-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; padding: 0.5rem; background: #1a1a1a; border-radius: 6px; }
+        .hero-page-row__name { font-size: 0.8rem; color: #aaa; min-width: 80px; }
+        .hero-page-row__thumb { width: 60px; height: 34px; object-fit: cover; border-radius: 4px; }
+        .hero-page-row select { flex: 1; padding: 0.35rem 0.5rem; background: #222; border: 1px solid #444; border-radius: 4px; color: #fff; font-size: 0.8rem; }
+
         /* Toast */
         .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #4a4; color: #fff; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.85rem; transition: transform 0.3s ease; z-index: 100; }
         .toast.show { transform: translateX(-50%) translateY(0); }
@@ -155,6 +171,13 @@
                 <label>Tlačítko</label>
                 <input type="text" data-path="hero.cta">
             </div>
+        </div>
+
+        <!-- Hero Images per page -->
+        <div class="editor-section">
+            <div class="editor-section__title"><span class="editor-section__icon">&#9724;</span> Header fotky (na stránku)</div>
+            <p style="font-size:0.75rem;color:#666;margin-bottom:1rem;">Vyber header fotku pro každou stránku. Fotky se berou z galerie.</p>
+            <div id="heroEditor"></div>
         </div>
 
         <!-- About -->
@@ -343,6 +366,9 @@
 
             // Hours
             renderHours();
+
+            // Hero images
+            renderHeroPicker();
         }
 
         function renderAboutParagraphs() {
@@ -415,6 +441,68 @@
                     <input type="text" value="${esc(h.time)}" oninput="content.contact.hours[${i}].time=this.value" placeholder="Čas">`;
                 box.appendChild(div);
             });
+        }
+
+        // ===================== HERO IMAGE PICKER =====================
+        const pageNames = {
+            home: 'Hlavní stránka',
+            sluzby: 'Služby',
+            'o-nas': 'O nás',
+            galerie: 'Galerie',
+            produkty: 'Produkty',
+            rezervace: 'Rezervace',
+            kontakt: 'Kontakt',
+            blog: 'Blog'
+        };
+
+        function renderHeroPicker() {
+            const box = document.getElementById('heroEditor');
+            if (!box) return;
+            box.innerHTML = '';
+
+            if (!content.heroes) content.heroes = {};
+
+            const allImages = photos.map(p => p.src);
+
+            Object.entries(pageNames).forEach(([key, name]) => {
+                if (!content.heroes[key]) content.heroes[key] = {};
+                const current = content.heroes[key]?.image || '';
+
+                const row = document.createElement('div');
+                row.className = 'hero-page-row';
+
+                const thumb = current
+                    ? `<img src="${current}" class="hero-page-row__thumb" alt="">`
+                    : `<div class="hero-page-row__thumb" style="background:#333;"></div>`;
+
+                const options = allImages.map(src => {
+                    const filename = src.split('/').pop();
+                    const selected = src === current ? 'selected' : '';
+                    return `<option value="${src}" ${selected}>${filename}</option>`;
+                }).join('');
+
+                row.innerHTML = `
+                    <span class="hero-page-row__name">${name}</span>
+                    ${thumb}
+                    <select onchange="setHeroImage('${key}', this.value, this.parentElement)">
+                        <option value="">— žádná —</option>
+                        ${options}
+                    </select>`;
+                box.appendChild(row);
+            });
+        }
+
+        function setHeroImage(page, src, rowEl) {
+            if (!content.heroes) content.heroes = {};
+            if (!content.heroes[page]) content.heroes[page] = {};
+            content.heroes[page].image = src;
+            // Update thumbnail
+            const thumb = rowEl.querySelector('.hero-page-row__thumb');
+            if (thumb && src) {
+                if (thumb.tagName === 'IMG') { thumb.src = src; }
+                else { thumb.outerHTML = `<img src="${src}" class="hero-page-row__thumb" alt="">`; }
+            }
+            toast(`Header pro "${pageNames[page]}" nastaven`);
         }
 
         // ===================== HELPERS =====================
