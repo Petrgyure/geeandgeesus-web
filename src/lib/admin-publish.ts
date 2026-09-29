@@ -49,7 +49,7 @@ export function validateDocuments(content: unknown, gallery: unknown) {
 export function publishConfig() {
   const token = process.env.GITHUB_CONTENT_TOKEN;
   const branch = process.env.GITHUB_PUBLISH_BRANCH;
-  if (process.env.GITHUB_PUBLISH_ENABLED !== "true" || !token || !branch || !BRANCH.test(branch) ||
+  if (process.env.GITHUB_PUBLISH_ENABLED !== "true" || !token || !branch || branch === "main" || !BRANCH.test(branch) ||
       branch.startsWith("/") || branch.endsWith("/") || branch.includes("..") || branch.includes("//") || branch.endsWith(".lock")) return null;
   return { token, branch };
 }

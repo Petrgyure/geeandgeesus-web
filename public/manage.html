@@ -569,10 +569,11 @@
             if (!sel) return;
             const videos = photos.filter(p => /\.(mp4|webm|mov)$/i.test(p.src));
             const current = content.hero?.video || '';
-            sel.innerHTML = '<option value="">— žádné —</option>' + videos.map(v => {
+            sel.disabled = videos.length === 0;
+            sel.innerHTML = videos.length ? videos.map(v => {
                 const selected = v.src === current ? 'selected' : '';
                 return `<option value="${esc(v.src)}" ${selected}>${esc(v.src.split('/').pop())}</option>`;
-            }).join('');
+            }).join('') : '<option disabled>Žádné dostupné video</option>';
         }
 
         function setHeroVideo(src) {
@@ -613,7 +614,6 @@
                     <span class="hero-page-row__name">${name}</span>
                     ${thumb}
                     <select onchange="setHeroImage('${key}', this.value, this.parentElement)">
-                        <option value="">— žádná —</option>
                         ${options}
                     </select>`;
                 box.appendChild(row);

@@ -57,6 +57,11 @@ test('booking copy does not show typo or concatenated labels', () => {
   assert.ok(!main('sluzby').includes(`${content.booking.label}: ${content.booking.title}.`));
 });
 
+test('hero media selectors cannot clear required asset paths', () => {
+  const editor = readFileSync(new URL('../public/manage.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(editor, /<option value="">— žádn(?:é|á) —<\/option>/);
+});
+
 test('editor warns that website prices do not update Noona', () => {
   const editor = readFileSync(new URL('../public/manage.html', import.meta.url), 'utf8');
   assert.match(editor, /Noona/);

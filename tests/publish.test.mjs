@@ -67,6 +67,8 @@ test('publishing requires explicit enablement, token, and a safe branch', () => 
     assert.equal(publishConfig(), null);
     process.env.GITHUB_PUBLISH_ENABLED = 'true';
     assert.deepEqual(publishConfig(), { token: 'test-only', branch: 'release' });
+    process.env.GITHUB_PUBLISH_BRANCH = 'main';
+    assert.equal(publishConfig(), null);
     process.env.GITHUB_PUBLISH_BRANCH = '../main';
     assert.equal(publishConfig(), null);
     delete process.env.GITHUB_PUBLISH_BRANCH;
