@@ -66,6 +66,16 @@ test('owner status does not claim publishing is ready without a working flow', a
   assert.match(response.headers.get('cache-control') || '', /no-store/);
 });
 
+test('login rejects missing Origin, malformed form and streamed oversized body', async () => {
+  const absentOrigin = await fetch(`${base}/api/admin/login`, { method: 'POST', body: new URLSearchParams({ password }), redirect: 'manual' });
+  assert.equal(absentOrigin.status, 403);
+  const badType = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { origin: base, 'content-type': 'application/json' }, body: '{}', redirect: 'manual' });
+  assert.equal(badType.status, 415);
+  const stream = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode('password=' + 'x'.repeat(5000))); controller.close(); } });
+  const tooLarge = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { origin: base, 'content-type': 'application/x-www-form-urlencoded' }, body: stream, duplex: 'half', redirect: 'manual' });
+  assert.equal(tooLarge.status, 413);
+});
+
 test('owner API denies anonymous access and cross-origin writes', async () => {
   assert.equal((await fetch(`${base}/api/admin/status`)).status, 401);
   const response = await fetch(`${base}/api/admin/login`, {
