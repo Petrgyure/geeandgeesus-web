@@ -1,5 +1,4 @@
 import content from "../../../public/content.json";
-import { PageHero } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Section, SectionHeader } from "@/components/section";
@@ -30,7 +29,6 @@ const services = content.services.items.map((item, i) => ({ ...item, icon: servi
 export default function ServicesPage() {
   return (
     <div className="pt-[96px]">
-      <PageHero page="sluzby" />
       <Section raised>
         <SectionHeader
           label={content.services.label}
@@ -49,7 +47,7 @@ export default function ServicesPage() {
           Připraven?
         </h2>
         <p className="text-text-muted mb-8">
-          {content.booking.label}: {content.booking.title}. {content.booking.desc}
+          {content.booking.desc}
         </p>
         <Link
           href="/rezervace"

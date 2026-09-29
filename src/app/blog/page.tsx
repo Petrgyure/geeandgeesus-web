@@ -1,4 +1,3 @@
-import { PageHero } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +16,6 @@ export default function BlogPage() {
 
   return (
     <div className="pt-[96px]">
-      <PageHero page="blog" />
       <Section>
         <SectionHeader
           label="Blog"

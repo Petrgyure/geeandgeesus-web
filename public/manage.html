@@ -221,6 +221,7 @@
             <div class="field">
                 <label>Nadpis (H1)</label>
                 <input type="text" data-path="hero.tagline">
+                <p class="field-hint">Logo je pevné; tento nadpis H1 je pro čtečky obrazovky a vyhledávače, nikoli viditelný text.</p>
             </div>
             <div class="field">
                 <label>Podnadpis</label>
@@ -238,7 +239,7 @@
         </div>
 
         <!-- Hero Images per page -->
-        <div class="editor-section">
+        <div class="editor-section" style="display:none" aria-hidden="true">
             <div class="editor-section__title"><span class="editor-section__icon">&#9724;</span> Header fotky (na stránku)</div>
             <p style="font-size:0.75rem;color:#666;margin-bottom:1rem;">Vyber header fotku pro každou stránku. Fotky se berou z galerie.</p>
             <div id="heroEditor"></div>
@@ -262,6 +263,7 @@
         <!-- Services -->
         <div class="editor-section">
             <div class="editor-section__title"><span class="editor-section__icon">&#9733;</span> Služby</div>
+            <p class="field-hint">Ceny zde mění pouze web. Ceny v Noona se neaktualizují; upravte je zvlášť přímo v Noona.</p>
             <div class="field">
                 <label>Nadpis sekce</label>
                 <input type="text" data-path="services.title">

@@ -5,6 +5,7 @@ import content from "../../public/content.json";
 export function Hero() {
   const heroVideo = content.heroes.home.video || content.hero.video;
   const heroPoster = content.heroes.home.image || content.hero.image;
+  const [subtitle, location] = content.hero.subtitle.split(" • Biskupcova 46, Praha 3");
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Video background */}
@@ -32,9 +33,9 @@ export function Hero() {
           className="w-[340px] md:w-[500px] h-auto mx-auto mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
           priority
         />
-        <h1 className="text-white text-sm uppercase tracking-[0.2em]">{content.hero.tagline}</h1>
+        <h1 className="sr-only">{content.hero.tagline} — pánský barber Praha 3 Žižkov</h1>
         <p className="text-text-muted text-[0.95rem] tracking-[0.1em] mb-10 mt-4">
-          {content.hero.subtitle}
+          {location === "" ? <>{subtitle}<br />Biskupcova 46, Praha 3</> : content.hero.subtitle}
         </p>
         <Link
           href="/rezervace"

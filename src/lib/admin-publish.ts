@@ -21,7 +21,7 @@ function asset(value: unknown, optional = false) {
 function text(value: unknown, path: string) {
   if (typeof value !== "string" || value.length > 4000 || /[\u0000-\u0008\u000b-\u001f]/.test(value)) fail(`Invalid text at ${path}`);
   if (/[<>]/.test(value) && !HTML.test(value)) fail(`Unsafe HTML at ${path}`);
-  if ((path.endsWith(".image") || path.endsWith(".img") || path.endsWith(".video")) && value) asset(value);
+  if (path.endsWith(".image") || path.endsWith(".img") || path.endsWith(".video")) asset(value);
   if (path.endsWith(".email") && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(value)) fail("Invalid email");
 }
 function shape(value: unknown, example: unknown, path: string): void {

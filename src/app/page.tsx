@@ -41,6 +41,15 @@ const galleryPreview = [
 ];
 
 const products = content.products.items;
+const [streetAddress, localityAndPostcode, country] = content.contact.address.split(/<br\s*\/?>/i);
+const addressMatch = localityAndPostcode?.match(/^(.+),\s*(\d{3}\s*\d{2})$/);
+const postalAddress = streetAddress && addressMatch && country === "Česká republika" ? {
+  "@type": "PostalAddress",
+  streetAddress,
+  addressLocality: addressMatch[1],
+  postalCode: addressMatch[2].replace(/\s/g, ""),
+  addressCountry: "CZ",
+} : undefined;
 
 export default function HomePage() {
   return (
@@ -168,6 +177,10 @@ export default function HomePage() {
             description: "Pánský barbershop v Praze 3 na Žižkově. Střihy, úprava vousů, hot towel holení a místo, kam se chodí i jen na řeč.",
             url: "https://www.geeandgeesus.cz",
             email: content.contact.email,
+            ...(postalAddress ? { address: postalAddress } : {}),
+            // The map pin is fixed. Do not attach these coordinates to an edited address elsewhere.
+            ...(postalAddress && streetAddress === "Biskupcova 46" && addressMatch?.[1] === "Praha 3" && addressMatch?.[2].replace(/\s/g, "") === "13000"
+              ? { geo: { "@type": "GeoCoordinates", latitude: 50.0903, longitude: 14.4717 } } : {}),
             image: `https://www.geeandgeesus.cz/${content.heroes.home.image}`,
             sameAs: ["https://www.instagram.com/geeandgeesus/", "https://www.facebook.com/geeandgeesus/"],
           }).replace(/</g, "\\u003c"),

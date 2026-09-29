@@ -1,5 +1,5 @@
 import content from "../../../public/content.json";
-import { PageHero, ContactDetails } from "@/components/content-blocks";
+import { ContactDetails } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import { Section, SectionHeader } from "@/components/section";
 
@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="pt-[96px]">
-      <PageHero page="kontakt" />
       <Section>
         <SectionHeader label={content.contact.label} title={content.contact.title} />
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">

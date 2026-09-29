@@ -1,4 +1,3 @@
-import Image from "next/image";
 import content from "../../public/content.json";
 
 /** Only literal <strong>, </strong>, and <br> become elements; all other input is escaped by React. */
@@ -21,14 +20,6 @@ export function ContentText({ value }: { value: string }) {
   });
   if (inBold) nodes.push(...bold);
   return <>{nodes}</>;
-}
-
-export function PageHero({ page }: { page: keyof typeof content.heroes }) {
-  const image = content.heroes[page].image;
-  return <div className="relative h-40 md:h-56 overflow-hidden" aria-hidden="true">
-    <Image src={`/${image}`} alt="" fill sizes="100vw" className="object-cover" priority />
-    <div className="absolute inset-0 bg-gradient-to-b from-anthracite-900/30 to-anthracite-900/90" />
-  </div>;
 }
 
 export function ContactDetails() {

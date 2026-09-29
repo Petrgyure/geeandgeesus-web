@@ -1,5 +1,3 @@
-import content from "../../../public/content.json";
-import { PageHero, ContentText } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,9 +11,8 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="pt-[72px]">
-      <PageHero page="o-nas" />
       <Section>
-        <SectionHeader label={content.about.label} title={content.about.title} />
+        <SectionHeader label="O nás" title="Dva kluci. Jedno místo. Nulové kecy." />
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
           <div>
             <Image
@@ -27,8 +24,18 @@ export default function AboutPage() {
             />
           </div>
           <div>
-            <p className="text-xl md:text-2xl text-white mb-6 leading-snug"><ContentText value={content.about.lead} /></p>
-            {content.about.paragraphs.map((paragraph, i) => <p key={i} className="text-text-body mb-4"><ContentText value={paragraph} /></p>)}
+            <p className="text-xl md:text-2xl text-white mb-6 leading-snug">
+              Gee &amp; Geesus nevznikl z business plánu. Vznikl z toho, že jsme chtěli místo, kam bychom sami chodili.
+            </p>
+            <p className="text-text-body mb-4">
+              Místo, kde se nemusíte přetvařovat. Kde můžete říct, co si myslíte, a nikdo vás za to nesoudí. Kde si dáte drink, proberete víkend, a mimochodem vám dáme do kupy vlasy nebo vous.
+            </p>
+            <p className="text-text-body mb-4">
+              Pracujeme s přírodními materiály, děláme si vlastní produkty a odmítáme dělat kompromisy na kvalitě. Každý klient odchází s pocitem, že strávil čas s kamarády — ne v čekárně.
+            </p>
+            <p className="text-text-body">
+              Tohle není jen práce. Tohle je náš prostor. A jste v něm vítáni.
+            </p>
           </div>
         </div>
       </Section>

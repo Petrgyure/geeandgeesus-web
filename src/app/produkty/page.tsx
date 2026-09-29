@@ -1,5 +1,4 @@
 import content from "../../../public/content.json";
-import { PageHero } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Section, SectionHeader } from "@/components/section";
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
 export default function ProductsPage() {
   return (
     <div className="pt-[96px]">
-      <PageHero page="produkty" />
       <Section>
         <SectionHeader
           label={content.products.label}

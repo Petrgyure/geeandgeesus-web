@@ -1,5 +1,4 @@
 import content from "../../../public/content.json";
-import { PageHero } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { Section, SectionHeader } from "@/components/section";
@@ -15,7 +14,6 @@ export default function GalleryPage() {
 
   return (
     <div className="pt-[96px]">
-      <PageHero page="galerie" />
       <Section>
         <SectionHeader label={content.gallery.label} title={content.gallery.title} />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">

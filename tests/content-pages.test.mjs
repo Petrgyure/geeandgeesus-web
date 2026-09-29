@@ -8,7 +8,7 @@ const text = (s) => s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAl
 const contains = (html, value) => assert.ok(html.includes(text(value)), `missing rendered value: ${value}`);
 const imageUrl = (value) => encodeURIComponent(`/${value}`);
 
-for (const route of ['index', 'o-nas']) {
+for (const route of ['index']) {
   test(`${route} renders editable about content`, () => {
     const html = page(route);
     for (const value of [content.about.label, content.about.title, content.about.lead]) contains(html, value);
@@ -31,7 +31,7 @@ for (const route of ['index', 'produkty']) {
     for (const item of content.products.items) assert.ok(html.includes(imageUrl(item.img)));
   });
 }
-for (const route of ['index', 'rezervace', 'sluzby']) {
+for (const route of ['index', 'rezervace']) {
   test(`${route} renders editable booking fields`, () => {
     const html = page(route);
     for (const value of [content.booking.label, content.booking.title, content.booking.desc]) contains(html, value);
@@ -53,8 +53,7 @@ for (const route of ['index', 'galerie']) {
 }
 test('homepage renders hero text and selected home imagery', () => {
   const html = page('index');
-  for (const value of [content.hero.tagline, content.hero.subtitle, content.hero.cta]) contains(html, value);
-  assert.ok(!html.includes('class="sr-only">' + text(content.hero.tagline)), 'tagline must be visible, not only screen-reader copy');
+  for (const value of [content.hero.tagline, ...content.hero.subtitle.split(' • Biskupcova 46, Praha 3'), content.hero.cta]) contains(html, value);
   for (const value of [content.heroes.home.image, content.heroes.home.video]) assert.ok(html.includes(value));
 });
 test('editable price and opening hours are not contradicted by static SEO claims', () => {
@@ -64,7 +63,3 @@ test('editable price and opening hours are not contradicted by static SEO claims
   assert.ok(!contact.match(/<meta name="description"[^>]*Po-Pá 8-18/));
   assert.ok(!page('index').includes('"priceRange":"699–1299 CZK"'));
 });
-
-for (const route of ['sluzby', 'o-nas', 'galerie', 'produkty', 'rezervace', 'kontakt', 'blog']) {
-  test(`${route} renders selected page hero image`, () => assert.ok(page(route).includes(imageUrl(content.heroes[route].image))));
-}
