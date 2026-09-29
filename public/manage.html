@@ -131,6 +131,18 @@
         .upload-item__status--error { color: #f66; }
 
         /* Toast */
+        .result-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
+        .result-modal.show { display: flex; }
+        .result-modal__box { background: #1a1a1a; border: 1px solid #3a3a3a; border-radius: 10px; padding: 1.5rem; max-width: 500px; width: 100%; }
+        .result-modal__icon { font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem; }
+        .result-modal__title { font-size: 1.2rem; font-weight: 600; text-align: center; margin-bottom: 0.5rem; }
+        .result-modal__title.ok { color: #4a4; }
+        .result-modal__title.err { color: #f66; }
+        .result-modal__msg { color: #aaa; text-align: center; font-size: 0.9rem; margin-bottom: 1rem; }
+        .result-modal__errors { background: #2a1a1a; border: 1px solid #5a2a2a; border-radius: 6px; padding: 0.75rem; max-height: 200px; overflow-y: auto; font-size: 0.75rem; color: #faa; margin-bottom: 1rem; font-family: monospace; }
+        .result-modal__errors div { margin-bottom: 0.25rem; }
+        .result-modal__btn { display: block; width: 100%; padding: 0.7rem; background: #3a3a3a; border: none; color: #fff; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+        .result-modal__btn:hover { background: #4a4a4a; }
         .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(100px); background: #4a4; color: #fff; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.85rem; transition: transform 0.3s ease; z-index: 100; }
         .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -203,8 +215,8 @@
 
         <!-- Upload zone -->
         <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
-            <p class="upload-zone__text"><strong>Přetáhněte fotky sem</strong> nebo klikněte pro výběr<br>JPG, PNG, WebP — max 5 MB na fotku</p>
-            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" multiple onchange="handleFiles(this.files)">
+            <p class="upload-zone__text"><strong>Přetáhněte fotky nebo videa sem</strong> nebo klikněte pro výběr<br>JPG, PNG, WebP — max 5 MB • MP4, WebM, MOV — max 25 MB</p>
+            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple onchange="handleFiles(this.files)">
         </div>
         <div class="upload-progress" id="uploadProgress"></div>
 
@@ -234,6 +246,11 @@
             <div class="field">
                 <label>Tlačítko</label>
                 <input type="text" data-path="hero.cta">
+            </div>
+            <div class="field">
+                <label>Video v headeru (homepage)</label>
+                <select id="heroVideoPicker" onchange="setHeroVideo(this.value)"></select>
+                <p style="font-size:0.7rem;color:#666;margin-top:0.3rem;">Vyber video z nahraných souborů (MP4, MOV, WebM). Nahrávej přes záložku Galerie.</p>
             </div>
         </div>
 
@@ -332,6 +349,16 @@
     </div><!-- /adminPanel -->
 
     <div class="toast" id="toast"></div>
+
+    <div class="result-modal" id="resultModal" onclick="if(event.target===this)closeResult()">
+        <div class="result-modal__box">
+            <div class="result-modal__icon" id="resultIcon"></div>
+            <div class="result-modal__title" id="resultTitle"></div>
+            <div class="result-modal__msg" id="resultMsg"></div>
+            <div class="result-modal__errors" id="resultErrors" style="display:none"></div>
+            <button class="result-modal__btn" onclick="closeResult()">OK</button>
+        </div>
+    </div>
 
     <script>
         // ===================== AUTH =====================
@@ -456,7 +483,9 @@
                             <button class="card__btn card__btn--wide" onclick="toggleWide(${photo.idx})">W</button>
                         </div>
                     </div>
-                    <img src="${photo.src}" alt="${photo.alt}" loading="lazy">
+                    ${/\.(mp4|webm|mov)$/i.test(photo.src)
+                        ? `<video src="${photo.src}" muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover" onmouseover="this.play()" onmouseout="this.pause()"></video>`
+                        : `<img src="${photo.src}" alt="${photo.alt}" loading="lazy">`}
                     <div class="card__name">${photo.src.split('/').pop()}</div>`;
                 grid.appendChild(card);
             });
@@ -590,7 +619,26 @@
             blog: 'Blog'
         };
 
+        function renderHeroVideoPicker() {
+            const sel = document.getElementById('heroVideoPicker');
+            if (!sel) return;
+            const videos = photos.filter(p => /\.(mp4|webm|mov)$/i.test(p.src));
+            const current = content.hero?.video || '';
+            sel.innerHTML = '<option value="">— žádné —</option>' + videos.map(v => {
+                const selected = v.src === current ? 'selected' : '';
+                return `<option value="${v.src}" ${selected}>${v.src.split('/').pop()}</option>`;
+            }).join('');
+        }
+
+        function setHeroVideo(src) {
+            if (!content.hero) content.hero = {};
+            content.hero.video = src;
+            if (content.heroes?.home) content.heroes.home.video = src;
+            toast(src ? `Hero video nastaveno: ${src.split('/').pop()}` : 'Hero video odebráno');
+        }
+
         function renderHeroPicker() {
+            renderHeroVideoPicker();
             const box = document.getElementById('heroEditor');
             if (!box) return;
             box.innerHTML = '';
@@ -631,6 +679,8 @@
             if (!content.heroes) content.heroes = {};
             if (!content.heroes[page]) content.heroes[page] = {};
             content.heroes[page].image = src;
+            // Keep content.hero.image in sync for home page (Next.js Hero component reads this)
+            if (page === 'home') { if (!content.hero) content.hero = {}; content.hero.image = src; }
             // Update thumbnail
             const thumb = rowEl.querySelector('.hero-page-row__thumb');
             if (thumb && src) {
@@ -694,8 +744,8 @@
             const btn = document.getElementById('deployBtn');
             btn.disabled = true; btn.textContent = 'Publikuji...';
             try {
-                await pushFile('gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery');
-                await pushFile('content.json', JSON.stringify(content, null, 2) + '\n', 'admin: update content');
+                await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery');
+                await pushFile('public/content.json', JSON.stringify(content, null, 2) + '\n', 'admin: update content');
                 toast('Vše publikováno! Web se aktualizuje za ~30s.');
                 btn.textContent = 'Publikováno!';
                 setTimeout(() => { btn.textContent = 'Publikovat vše na web'; btn.disabled = false; }, 3000);
@@ -717,15 +767,24 @@
             const token = getToken();
             if (!token) { toast('Nastav GitHub token v Nastavení pro nahrávání fotek'); toggleSettings(); return; }
 
-            const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
-            if (!files.length) { toast('Vyberte obrázky (JPG, PNG, WebP)'); return; }
+            const files = Array.from(fileList).filter(f => {
+                if (f.type.startsWith('image/') || f.type.startsWith('video/')) return true;
+                return /\.(jpe?g|png|webp|mp4|webm|mov)$/i.test(f.name);
+            });
+            if (!files.length) { toast('Vyberte fotky nebo videa'); return; }
 
             const progress = document.getElementById('uploadProgress');
             progress.innerHTML = '';
 
+            let okCount = 0;
+            const errors = [];
             for (const file of files) {
-                if (file.size > 5 * 1024 * 1024) {
-                    addUploadItem(progress, file.name, null, 'error', 'Příliš velký (max 5 MB)');
+                const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(file.name);
+                const maxSize = isVideo ? 25 * 1024 * 1024 : 5 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    const msg = isVideo ? 'Příliš velké (max 25 MB)' : 'Příliš velký (max 5 MB)';
+                    addUploadItem(progress, file.name, null, 'error', msg);
+                    errors.push(`${file.name}: ${msg}`);
                     continue;
                 }
 
@@ -769,7 +828,7 @@
                         body: JSON.stringify(body)
                     });
 
-                    if (!res.ok) throw new Error('Upload selhal');
+                    if (!res.ok) { const t = await res.text(); throw new Error(`${res.status}: ${t.slice(0,80)}`); }
 
                     // Add to gallery.json (hidden by default)
                     const src = `img/${cleanName}`;
@@ -778,20 +837,25 @@
                     }
 
                     updateUploadItem(item, 'done', 'Nahráno!');
+                    okCount++;
                 } catch (e) {
                     updateUploadItem(item, 'error', e.message || 'Chyba');
+                    errors.push(`${file.name}: ${e.message || 'Chyba'}`);
                 }
             }
 
             // Save updated gallery.json
-            try {
-                await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery after upload');
-                renderGallery();
-                renderHeroPicker();
-                toast(`${files.length} foto nahráno. Zapněte je v galerii.`);
-            } catch (e) {
-                toast('Fotky nahrány, ale gallery.json se nepodařilo uložit.');
+            let galleryErr = null;
+            if (okCount > 0) {
+                try {
+                    await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery after upload');
+                    renderGallery();
+                    renderHeroPicker();
+                } catch (e) {
+                    galleryErr = e.message || 'neznámá chyba';
+                }
             }
+            showUploadResult(okCount, errors, galleryErr);
         }
 
         function fileToBase64(file) {
@@ -819,6 +883,38 @@
             el.className = `upload-item__status upload-item__status--${status}`;
             el.textContent = text;
         }
+
+        function showUploadResult(okCount, errors, galleryErr) {
+            const modal = document.getElementById('resultModal');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const msg = document.getElementById('resultMsg');
+            const errBox = document.getElementById('resultErrors');
+            const hasErr = errors.length > 0 || galleryErr;
+            if (okCount > 0 && !hasErr) {
+                icon.textContent = '✅';
+                title.textContent = 'Nahráno úspěšně!';
+                title.className = 'result-modal__title ok';
+                msg.textContent = `${okCount} ${okCount === 1 ? 'soubor je' : 'souborů je'} na webu. Zapněte je v galerii (ikona oka).`;
+                errBox.style.display = 'none';
+            } else if (okCount > 0 && hasErr) {
+                icon.textContent = '⚠️';
+                title.textContent = 'Částečně nahráno';
+                title.className = 'result-modal__title err';
+                msg.textContent = `${okCount} OK, ${errors.length} s chybou${galleryErr ? ' + gallery.json selhal' : ''}.`;
+                errBox.style.display = 'block';
+                errBox.innerHTML = [...errors, galleryErr && `gallery.json: ${galleryErr}`].filter(Boolean).map(e => `<div>• ${e}</div>`).join('');
+            } else {
+                icon.textContent = '❌';
+                title.textContent = 'Nahrávání selhalo';
+                title.className = 'result-modal__title err';
+                msg.textContent = 'Žádný soubor se nenahrál. Zkontrolujte chyby níže.';
+                errBox.style.display = 'block';
+                errBox.innerHTML = errors.map(e => `<div>• ${e}</div>`).join('') || '<div>• Neznámá chyba</div>';
+            }
+            modal.classList.add('show');
+        }
+        function closeResult() { document.getElementById('resultModal').classList.remove('show'); }
 
         function toast(msg) {
             const el = document.getElementById('toast');

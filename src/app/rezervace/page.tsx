@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ReservationPage() {
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       <Section className="!bg-gradient-to-br from-surface-raised via-anthracite-600 to-anthracite-400">
         <SectionHeader
           label="Rezervace"

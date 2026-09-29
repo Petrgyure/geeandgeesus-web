@@ -3,53 +3,24 @@ import Link from "next/link";
 import { Section } from "@/components/section";
 
 export const metadata: Metadata = {
-  title: "Přihlášení",
+  title: "Klientský profil",
   robots: "noindex",
 };
 
 export default function LoginPage() {
   return (
-    <div className="pt-[72px] min-h-screen flex items-center">
+    <div className="pt-[96px] min-h-screen flex items-center">
       <Section>
-        <div className="max-w-[400px] mx-auto">
-          <h1 className="font-heading text-3xl text-white tracking-wide text-center mb-8">
-            Přihlášení
+        <div className="max-w-[500px] mx-auto text-center">
+          <h1 className="font-heading text-3xl text-white tracking-wide mb-6">
+            Klientský profil je v přípravě
           </h1>
-          <div className="bg-surface-card border border-anthracite-500 rounded-lg p-6 md:p-8">
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs uppercase tracking-wide text-text-muted mb-1">Email</label>
-                <input
-                  type="email"
-                  className="w-full px-3 py-2.5 bg-anthracite-900 border border-anthracite-500 rounded-lg text-white text-sm focus:border-white focus:outline-none transition-colors"
-                  placeholder="vas@email.cz"
-                />
-              </div>
-              <div>
-                <label className="block text-xs uppercase tracking-wide text-text-muted mb-1">Heslo</label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2.5 bg-anthracite-900 border border-anthracite-500 rounded-lg text-white text-sm focus:border-white focus:outline-none transition-colors"
-                  placeholder="••••••••"
-                />
-              </div>
-              <button className="w-full bg-white text-anthracite-900 py-3 rounded-lg text-sm font-medium uppercase tracking-wider hover:bg-anthracite-50 transition-all">
-                Přihlásit se
-              </button>
-            </div>
-            <div className="mt-6 text-center text-sm text-text-muted">
-              <Link href="/zapomenute-heslo" className="hover:text-white transition-colors">
-                Zapomenuté heslo?
-              </Link>
-              <span className="mx-2">·</span>
-              <Link href="/registrace" className="hover:text-white transition-colors">
-                Vytvořit účet
-              </Link>
-            </div>
-          </div>
-          <p className="text-center text-xs text-text-muted mt-6">
-            Profil klienta je zatím v přípravě. Brzy tu bude.
+          <p className="text-text-muted mb-8">
+            Přihlášení zatím není spuštěné. Na střih se ale můžeš objednat už teď.
           </p>
+          <Link href="/rezervace" className="inline-block bg-white text-anthracite-900 px-6 py-3 rounded-lg text-sm font-medium uppercase tracking-wider hover:bg-anthracite-50 transition-colors">
+            Rezervovat termín
+          </Link>
         </div>
       </Section>
     </div>

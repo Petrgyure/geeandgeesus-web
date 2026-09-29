@@ -54,7 +54,7 @@ export default async function BlogPostPage({ params }: Props) {
   const related = allPosts.filter((p) => p.slug !== slug).slice(0, 3);
 
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       {/* Article header */}
       <Section>
         <div className="max-w-[680px] mx-auto text-center">

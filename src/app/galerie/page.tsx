@@ -12,25 +12,40 @@ export default function GalleryPage() {
   const visiblePhotos = galleryData.gallery.filter((p) => p.visible);
 
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       <Section>
         <SectionHeader label="Galerie" title="Jak to u nás vypadá" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
-          {visiblePhotos.map((photo) => (
-            <div
-              key={photo.src}
-              className={`overflow-hidden rounded-lg ${photo.wide ? "col-span-2 aspect-[2/1]" : "aspect-square"}`}
-            >
-              <Image
-                src={`/${photo.src}`}
-                alt={photo.alt}
-                width={photo.wide ? 800 : 400}
-                height={400}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                loading="lazy"
-              />
-            </div>
-          ))}
+          {visiblePhotos.map((photo) => {
+            const isVideo = /\.(mp4|webm|mov)$/i.test(photo.src);
+            return (
+              <div
+                key={photo.src}
+                className={`overflow-hidden rounded-lg ${photo.wide ? "col-span-2 aspect-[2/1]" : "aspect-square"}`}
+              >
+                {isVideo ? (
+                  <video
+                    src={`/${photo.src}`}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <Image
+                    src={`/${photo.src}`}
+                    alt={photo.alt}
+                    width={photo.wide ? 800 : 400}
+                    height={400}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </Section>
     </div>

@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/profil/", "/manage.html"],
       },
     ],
-    sitemap: "https://www.geeandgeesus.cz/sitemap.xml",
+    sitemap: "https://geeandgeesus.vercel.app/sitemap.xml",
   };
 }

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       <Section>
         <SectionHeader label="Kontakt" title="Najdete nás na rohu" />
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">

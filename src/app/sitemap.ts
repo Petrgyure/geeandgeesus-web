@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.geeandgeesus.cz";
+  const baseUrl = "https://geeandgeesus.vercel.app";
   const posts = getAllPosts();
 
   const staticPages: MetadataRoute.Sitemap = [

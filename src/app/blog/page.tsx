@@ -15,7 +15,7 @@ export default function BlogPage() {
   const categories = getCategories();
 
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       <Section>
         <SectionHeader
           label="Blog"

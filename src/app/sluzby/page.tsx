@@ -41,7 +41,7 @@ const services = [
 
 export default function ServicesPage() {
   return (
-    <div className="pt-[72px]">
+    <div className="pt-[96px]">
       <Section raised>
         <SectionHeader
           label="Služby"

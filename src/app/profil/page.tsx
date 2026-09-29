@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ProfilePage() {
   return (
-    <div className="pt-[72px] min-h-screen">
+    <div className="pt-[96px] min-h-screen">
       <Section>
         <div className="max-w-[600px] mx-auto text-center">
           <h1 className="font-heading text-3xl text-white tracking-wide mb-4">

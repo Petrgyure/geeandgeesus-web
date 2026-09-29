@@ -4,10 +4,10 @@
     "subtitle": "Střihy • Vousy • Řeči • Biskupcova 46, Praha 3",
     "cta": "Zarezervovat křeslo",
     "image": "img/hero-exterior.jpg",
-    "video": "img/hero-video.mp4"
+    "video": "img/welcome-video.mp4"
   },
   "heroes": {
-    "home": { "image": "img/hero-exterior.jpg", "video": "img/hero-video.mp4" },
+    "home": { "image": "img/hero-exterior.jpg", "video": "img/welcome-video.mp4" },
     "sluzby": { "image": "img/interior-wide.jpg" },
     "o-nas": { "image": "img/owners-front.jpg" },
     "galerie": { "image": "img/interior-wide.jpg" },

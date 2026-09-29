@@ -25,7 +25,7 @@ export function Nav() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-[96px] transition-all duration-300 ${
           scrolled
             ? "bg-anthracite-700/95 backdrop-blur-xl shadow-[0_1px_0_var(--color-anthracite-500)]"
             : ""
@@ -36,9 +36,9 @@ export function Nav() {
             <Image
               src="/img/logo.png"
               alt="Gee & Geesus"
-              width={180}
-              height={60}
-              className="h-[52px] w-auto"
+              width={260}
+              height={87}
+              className="h-[80px] w-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
               priority
             />
           </Link>

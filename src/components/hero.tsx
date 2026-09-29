@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import content from "../../public/content.json";
 
 export function Hero() {
+  const heroVideo = content.hero?.video || "img/welcome-video.mp4";
+  const heroPoster = content.hero?.image || "img/hero-exterior.jpg";
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Video background */}
@@ -11,10 +14,10 @@ export function Hero() {
           muted
           loop
           playsInline
-          poster="/img/hero-exterior.jpg"
+          poster={`/${heroPoster}`}
           className="w-full h-full object-cover"
         >
-          <source src="/img/hero-video.mp4" type="video/mp4" />
+          <source src={`/${heroVideo}`} type={heroVideo.endsWith('.mov') ? 'video/quicktime' : 'video/mp4'} />
         </video>
         <div className="absolute inset-0 bg-gradient-to-b from-anthracite-900/40 via-anthracite-900/60 to-anthracite-900/[0.92]" />
       </div>
@@ -22,19 +25,18 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 text-center px-6">
         <Image
-          src="/img/logo.png"
+          src="/img/logo-g.png"
           alt="Gee & Geesus"
-          width={280}
-          height={233}
-          className="w-[220px] md:w-[280px] h-auto mx-auto mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
+          width={1479}
+          height={865}
+          className="w-[340px] md:w-[500px] h-auto mx-auto mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
           priority
         />
-        <h1 className="font-heading text-4xl md:text-6xl text-white tracking-[0.15em] uppercase mb-2">
-          Gee &amp; Geesus
-          <span className="sr-only"> — pánský barber Praha 3 Žižkov</span>
-        </h1>
-        <p className="text-text-muted text-[0.95rem] tracking-[0.1em] mb-10">
-          Střihy &bull; Vousy &bull; Řeči &bull; Biskupcova 46, Praha 3
+        <h1 className="sr-only">Gee &amp; Geesus — pánský barber Praha 3 Žižkov</h1>
+        <p className="text-text-muted text-[0.95rem] tracking-[0.1em] mb-10 mt-4">
+          Střihy &bull; Vousy &bull; Řeči
+          <br />
+          Biskupcova 46, Praha 3
         </p>
         <Link
           href="/rezervace"

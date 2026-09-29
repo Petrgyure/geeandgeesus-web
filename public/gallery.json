@@ -1,6 +1,18 @@
 {
   "gallery": [
     {
+      "src": "img/welcome-video.mp4",
+      "alt": "Welcome in our world — Gee & Geesus",
+      "wide": true,
+      "visible": true
+    },
+    {
+      "src": "img/barber-video.mov",
+      "alt": "Video z barbershopu Gee & Geesus",
+      "wide": true,
+      "visible": false
+    },
+    {
       "src": "img/interior-wide.jpg",
       "alt": "Interiér barbershopu Gee & Geesus na Žižkově",
       "wide": true,

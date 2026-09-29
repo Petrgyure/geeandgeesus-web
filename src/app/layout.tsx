@@ -25,13 +25,14 @@ export const metadata: Metadata = {
   },
   description:
     "Barbershop na Žižkově, kde se nechodí jen pro střih. Pánské střihy, úprava vousů, hot towel holení a konverzace, kvůli kterým se vracíte. Biskupcova 46, Praha 3.",
-  metadataBase: new URL("https://www.geeandgeesus.cz"),
-  alternates: { canonical: "/" },
+  // Preview only: the client's www domain still serves the old website.
+  metadataBase: new URL("https://geeandgeesus.vercel.app"),
+  robots: { index: false, follow: false },
   openGraph: {
     title: "Gee & Geesus — Víc než barber. Praha 3, Žižkov.",
     description:
       "Barbershop, kam se chodí pro střih a zůstává se kvůli lidem. Biskupcova 46, Praha 3.",
-    url: "https://www.geeandgeesus.cz",
+    url: "https://geeandgeesus.vercel.app",
     siteName: "Gee & Geesus",
     locale: "cs_CZ",
     type: "website",
