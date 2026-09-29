@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Section, SectionHeader } from "@/components/section";
 
+const NOONA_BOOKING_URL = "https://noona.app/cs/geeandgeesus/book";
+const NOONA_EMBED_URL = `${NOONA_BOOKING_URL}?iframe=true&darkModeDisabled=true&showCancelButton=true`;
+
 export const metadata: Metadata = {
   title: "Rezervace — Online objednávka",
   description: "Zarezervujte si termín v barbershopu Gee & Geesus online. Střihy, úprava vousů a hot towel holení. Biskupcova 46, Praha 3.",
@@ -17,7 +20,7 @@ export default function ReservationPage() {
         />
         <div className="max-w-[700px] mx-auto bg-white rounded-lg overflow-hidden">
           <iframe
-            src="https://noona.app/cs/geeandgeesus/book?iframe=true&darkModeDisabled=true&showCancelButton=true"
+            src={NOONA_EMBED_URL}
             width="100%"
             height="600"
             style={{ height: "70vh", minHeight: 500, borderRadius: 8 }}
@@ -25,6 +28,12 @@ export default function ReservationPage() {
             loading="lazy"
           />
         </div>
+        <p className="text-center text-text-muted mt-5">
+          Nefunguje rezervační okno?{" "}
+          <a href={NOONA_BOOKING_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
+            Otevřít rezervaci přímo v Noona
+          </a>
+        </p>
       </Section>
     </div>
   );
