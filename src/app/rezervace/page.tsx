@@ -1,3 +1,5 @@
+import content from "../../../public/content.json";
+import { PageHero } from "@/components/content-blocks";
 import type { Metadata } from "next";
 import { Section, SectionHeader } from "@/components/section";
 
@@ -9,11 +11,12 @@ export const metadata: Metadata = {
 export default function ReservationPage() {
   return (
     <div className="pt-[96px]">
+      <PageHero page="rezervace" />
       <Section className="!bg-gradient-to-br from-surface-raised via-anthracite-600 to-anthracite-400">
         <SectionHeader
-          label="Rezervace"
-          title="Tvoje křeslo čeká"
-          description="Vyber si termín, přijď, sedni si. Zbytek necháš na nás."
+          label={content.booking.label}
+          title={content.booking.title}
+          description={content.booking.desc}
         />
         <div className="max-w-[700px] mx-auto bg-white rounded-lg overflow-hidden">
           <iframe

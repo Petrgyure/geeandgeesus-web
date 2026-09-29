@@ -3,8 +3,8 @@ import Link from "next/link";
 import content from "../../public/content.json";
 
 export function Hero() {
-  const heroVideo = content.hero?.video || "img/welcome-video.mp4";
-  const heroPoster = content.hero?.image || "img/hero-exterior.jpg";
+  const heroVideo = content.heroes.home.video || content.hero.video;
+  const heroPoster = content.heroes.home.image || content.hero.image;
   return (
     <section className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
       {/* Video background */}
@@ -32,17 +32,15 @@ export function Hero() {
           className="w-[340px] md:w-[500px] h-auto mx-auto mb-6 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
           priority
         />
-        <h1 className="sr-only">Gee &amp; Geesus — pánský barber Praha 3 Žižkov</h1>
+        <h1 className="text-white text-sm uppercase tracking-[0.2em]">{content.hero.tagline}</h1>
         <p className="text-text-muted text-[0.95rem] tracking-[0.1em] mb-10 mt-4">
-          Střihy &bull; Vousy &bull; Řeči
-          <br />
-          Biskupcova 46, Praha 3
+          {content.hero.subtitle}
         </p>
         <Link
           href="/rezervace"
           className="inline-block bg-white text-anthracite-900 px-10 py-4 rounded-lg text-[0.95rem] font-medium uppercase tracking-wider hover:bg-anthracite-50 hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow-lg)] transition-all"
         >
-          Zarezervovat křeslo
+          {content.hero.cta}
         </Link>
       </div>
 
