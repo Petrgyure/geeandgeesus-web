@@ -175,17 +175,18 @@
     <div id="adminPanel">
 
     <h1>Gee & Geesus — Správa <a href="./" class="preview-link" target="_blank">Zobrazit web &rarr;</a></h1>
-    <p style="background:#332718;color:#ffd68a;padding:0.75rem 1rem;border-radius:6px;">Zatím pouze náhled správy. Změny se neukládají na web; publikování a nahrávání souborů se připravuje.</p>
+    <p id="previewBanner" style="background:#332718;color:#ffd68a;padding:0.75rem 1rem;border-radius:6px;">Náhled správy. Změny nejsou na živém webu; publikování vyžaduje připojený Git a ověřené nasazení.</p>
 
     <div class="actions" style="margin-bottom:0.5rem;">
-        <button class="btn btn--deploy" id="deployBtn" disabled>Publikování se připravuje</button>
+        <button class="btn btn--deploy" id="deployBtn" onclick="deployAll()" disabled>Publikování se připravuje</button>
+        <span id="publishWarning" role="status">Publikování není nakonfigurováno; změny nejsou na živém webu.</span>
         <button class="btn" onclick="location.reload()">Obnovit</button>
         <button class="btn" onclick="doLogout()" style="margin-left:auto;color:#f66;border-color:#633;">Odhlásit</button>
         <span class="settings-toggle" onclick="toggleSettings()">Nastavení</span>
     </div>
 
     <div class="settings-panel" id="settingsPanel">
-        <p>Správa je chráněná přihlášením. Publikování změn a nahrávání souborů zatím není připojené; žádný GitHub token do prohlížeče nezadávejte.</p>
+        <p>Správa je chráněná přihlášením. Publikování zapisuje jen JSON do Git větve a teprve propojené nasazení jej dostane na web. Nahrávání souborů není připojené; žádný GitHub token do prohlížeče nezadávejte.</p>
     </div>
 
     <div class="tabs">
@@ -359,19 +360,37 @@
         let content = {};
         let currentFilter = 'all';
         let dragSrcIdx = null;
-        const REPO_OWNER = 'Petrgyure';
-        const REPO_NAME = 'geeandgeesus-web';
+        let expectedHead = null;
 
         // ===================== INIT =====================
-        Promise.all([
-            fetch('gallery.json').then(r => r.json()),
-            fetch('content.json').then(r => r.json())
-        ]).then(([g, c]) => {
-            photos = g.gallery;
-            content = c;
+        async function initEditor() {
+            try {
+                const response = await fetch('/api/admin/publish');
+                if (!response.ok) throw new Error('Repository snapshot unavailable');
+                const data = await response.json();
+                if (!/^[a-f0-9]{40}$/.test(data.head) || !data.content || !Array.isArray(data.gallery?.gallery)) throw new Error('Invalid snapshot');
+                content = data.content;
+                photos = data.gallery.gallery;
+                expectedHead = data.head;
+                const button = document.getElementById('deployBtn');
+                button.disabled = false;
+                button.textContent = 'Publikovat JSON do Git větve';
+                document.getElementById('publishWarning').textContent = 'Připraven zápis do Git. Živý web se změní až po propojení a úspěšném nasazení.';
+            } catch {
+                // Local files are a read-only preview when Git is not configured or unavailable.
+                try {
+                    const [g, c] = await Promise.all([
+                        fetch('gallery.json').then(r => { if (!r.ok) throw Error(); return r.json(); }),
+                        fetch('content.json').then(r => { if (!r.ok) throw Error(); return r.json(); })
+                    ]);
+                    photos = g.gallery;
+                    content = c;
+                } catch { toast('Náhled dat není dostupný.'); return; }
+            }
             renderGallery();
             renderContentEditor();
-        });
+        }
+        initEditor();
 
         // ===================== TABS =====================
         function switchTab(name) {
@@ -408,9 +427,9 @@
                         </div>
                     </div>
                     ${/\.(mp4|webm|mov)$/i.test(photo.src)
-                        ? `<video src="${photo.src}" muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover" onmouseover="this.play()" onmouseout="this.pause()"></video>`
-                        : `<img src="${photo.src}" alt="${photo.alt}" loading="lazy">`}
-                    <div class="card__name">${photo.src.split('/').pop()}</div>`;
+                        ? `<video src="${esc(photo.src)}" muted loop playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover" onmouseover="this.play()" onmouseout="this.pause()"></video>`
+                        : `<img src="${esc(photo.src)}" alt="${esc(photo.alt)}" loading="lazy">`}
+                    <div class="card__name">${esc(photo.src.split('/').pop())}</div>`;
                 grid.appendChild(card);
             });
             document.getElementById('countVisible').textContent = photos.filter(p => p.visible).length;
@@ -467,7 +486,7 @@
                 div.className = 'field';
                 div.innerHTML = `
                     <label>Odstavec ${i + 1} <button class="btn btn--sm" style="margin-left:0.5rem;color:#f66;border-color:#633;" onclick="removeAboutParagraph(${i})">Smazat</button></label>
-                    <textarea rows="3" oninput="content.about.paragraphs[${i}]=this.value">${text}</textarea>
+                    <textarea rows="3" oninput="content.about.paragraphs[${i}]=this.value">${esc(text)}</textarea>
                     <div class="field-hint">Můžeš použít &lt;strong&gt;tučně&lt;/strong&gt; pro zvýraznění.</div>`;
                 box.appendChild(div);
             });
@@ -550,7 +569,7 @@
             const current = content.hero?.video || '';
             sel.innerHTML = '<option value="">— žádné —</option>' + videos.map(v => {
                 const selected = v.src === current ? 'selected' : '';
-                return `<option value="${v.src}" ${selected}>${v.src.split('/').pop()}</option>`;
+                return `<option value="${esc(v.src)}" ${selected}>${esc(v.src.split('/').pop())}</option>`;
             }).join('');
         }
 
@@ -579,13 +598,13 @@
                 row.className = 'hero-page-row';
 
                 const thumb = current
-                    ? `<img src="${current}" class="hero-page-row__thumb" alt="">`
+                    ? `<img src="${esc(current)}" class="hero-page-row__thumb" alt="">`
                     : `<div class="hero-page-row__thumb" style="background:#333;"></div>`;
 
                 const options = allImages.map(src => {
                     const filename = src.split('/').pop();
                     const selected = src === current ? 'selected' : '';
-                    return `<option value="${src}" ${selected}>${filename}</option>`;
+                    return `<option value="${esc(src)}" ${selected}>${esc(filename)}</option>`;
                 }).join('');
 
                 row.innerHTML = `
@@ -609,7 +628,7 @@
             const thumb = rowEl.querySelector('.hero-page-row__thumb');
             if (thumb && src) {
                 if (thumb.tagName === 'IMG') { thumb.src = src; }
-                else { thumb.outerHTML = `<img src="${src}" class="hero-page-row__thumb" alt="">`; }
+                else { const image = document.createElement('img'); image.src = src; image.className = 'hero-page-row__thumb'; image.alt = ''; thumb.replaceWith(image); }
             }
             toast(`Header pro "${pageNames[page]}" nastaven`);
         }
@@ -622,11 +641,22 @@
             const target = keys.reduce((o, k) => o[k] = o[k] || {}, obj);
             target[last] = val;
         }
-        function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+        function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
 
-        // Publishing requires a server-side integration; browser tokens are not accepted.
+        // No browser GitHub token: publish only through the authenticated server API.
         async function deployAll() {
-            toast('Publikování zatím není připojené.');
+            if (!expectedHead) return toast('Publikování není připraveno.');
+            if (!confirm('Zapsat texty a galerii do Git větve? Živý web vyžaduje propojené nasazení.')) return;
+            const button = document.getElementById('deployBtn');
+            button.disabled = true;
+            try {
+                const response = await fetch('/api/admin/publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ expectedHead, content, gallery: { gallery: photos } }) });
+                const data = await response.json();
+                if (!response.ok) throw new Error(response.status === 409 ? 'Konflikt změn. Obnov stránku a zkus znovu.' : data.error || 'Publikování selhalo.');
+                expectedHead = data.head;
+                toast('Zapsáno do Git větve; nasazení na živý web není potvrzeno.');
+            } catch (error) { toast(error.message); }
+            finally { button.disabled = !expectedHead; }
         }
 
         // ===================== PHOTO UPLOAD =====================
@@ -654,9 +684,9 @@
             const div = document.createElement('div');
             div.className = 'upload-item';
             div.innerHTML = `
-                ${thumbUrl ? `<img src="${thumbUrl}" class="upload-item__thumb">` : '<div class="upload-item__thumb" style="background:#333"></div>'}
-                <span class="upload-item__name">${name}</span>
-                <span class="upload-item__status upload-item__status--${status}">${text}</span>`;
+                ${thumbUrl ? `<img src="${esc(thumbUrl)}" class="upload-item__thumb">` : '<div class="upload-item__thumb" style="background:#333"></div>'}
+                <span class="upload-item__name">${esc(name)}</span>
+                <span class="upload-item__status upload-item__status--${esc(status)}">${esc(text)}</span>`;
             container.appendChild(div);
             return div;
         }
@@ -686,14 +716,14 @@
                 title.className = 'result-modal__title err';
                 msg.textContent = `${okCount} OK, ${errors.length} s chybou${galleryErr ? ' + gallery.json selhal' : ''}.`;
                 errBox.style.display = 'block';
-                errBox.innerHTML = [...errors, galleryErr && `gallery.json: ${galleryErr}`].filter(Boolean).map(e => `<div>• ${e}</div>`).join('');
+                errBox.textContent = [...errors, galleryErr && `gallery.json: ${galleryErr}`].filter(Boolean).join('\n');
             } else {
                 icon.textContent = '❌';
                 title.textContent = 'Nahrávání selhalo';
                 title.className = 'result-modal__title err';
                 msg.textContent = 'Žádný soubor se nenahrál. Zkontrolujte chyby níže.';
                 errBox.style.display = 'block';
-                errBox.innerHTML = errors.map(e => `<div>• ${e}</div>`).join('') || '<div>• Neznámá chyba</div>';
+                errBox.textContent = errors.join('\n') || 'Neznámá chyba';
             }
             modal.classList.add('show');
         }

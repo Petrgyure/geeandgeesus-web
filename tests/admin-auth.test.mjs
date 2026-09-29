@@ -66,6 +66,15 @@ test('owner status does not claim publishing is ready without a working flow', a
   assert.match(response.headers.get('cache-control') || '', /no-store/);
 });
 
+test('publish API fails closed when explicit branch and enable gate are absent', async () => {
+  const login = await fetch(`${base}/api/admin/login`, { method: 'POST', headers: { origin: base, 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ password }), redirect: 'manual' });
+  const response = await fetch(`${base}/api/admin/publish`, { method: 'POST', headers: { cookie: login.headers.get('set-cookie'), origin: base, 'content-type': 'application/json' }, body: '{}' });
+  assert.equal((await fetch(`${base}/api/admin/publish`, { method: 'POST', headers: { origin: base, 'content-type': 'application/json' }, body: '{}' })).status, 401);
+  assert.equal((await fetch(`${base}/api/admin/publish`, { method: 'POST', headers: { cookie: login.headers.get('set-cookie'), origin: 'https://evil.example', 'content-type': 'application/json' }, body: '{}' })).status, 403);
+  assert.equal(response.status, 503);
+  assert.match(response.headers.get('cache-control') || '', /no-store/);
+});
+
 test('owner API denies anonymous access and cross-origin writes', async () => {
   assert.equal((await fetch(`${base}/api/admin/status`)).status, 401);
   const response = await fetch(`${base}/api/admin/login`, {
