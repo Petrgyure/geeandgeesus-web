@@ -171,38 +171,21 @@
     </style>
 </head>
 <body>
-    <!-- Login screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-box">
-            <h2>Gee & Geesus Admin</h2>
-            <p>Zadejte heslo pro přístup ke správě webu.</p>
-            <div class="login-error" id="loginError">Špatné heslo. Zkuste znovu.</div>
-            <input type="password" id="loginPassword" placeholder="Heslo" onkeydown="if(event.key==='Enter')doLogin()">
-            <button class="btn btn--primary" style="width:100%" onclick="doLogin()">Přihlásit se</button>
-        </div>
-    </div>
+    <!-- This page is served only after server-side owner authentication. -->
+    <div id="adminPanel">
 
-    <!-- Admin (hidden until login) -->
-    <div id="adminPanel" style="display:none;">
-
-    <h1>Gee & Geesus — Admin <a href="./" class="preview-link" target="_blank">Zobrazit web &rarr;</a></h1>
+    <h1>Gee & Geesus — Správa <a href="./" class="preview-link" target="_blank">Zobrazit web &rarr;</a></h1>
+    <p style="background:#332718;color:#ffd68a;padding:0.75rem 1rem;border-radius:6px;">Zatím pouze náhled správy. Změny se neukládají na web; publikování a nahrávání souborů se připravuje.</p>
 
     <div class="actions" style="margin-bottom:0.5rem;">
-        <button class="btn btn--deploy" id="deployBtn" onclick="deployAll()">Publikovat vše na web</button>
+        <button class="btn btn--deploy" id="deployBtn" disabled>Publikování se připravuje</button>
         <button class="btn" onclick="location.reload()">Obnovit</button>
         <button class="btn" onclick="doLogout()" style="margin-left:auto;color:#f66;border-color:#633;">Odhlásit</button>
         <span class="settings-toggle" onclick="toggleSettings()">Nastavení</span>
     </div>
 
     <div class="settings-panel" id="settingsPanel">
-        <label>GitHub Token (pro publikování na web)</label>
-        <input type="password" id="tokenInput" placeholder="ghp_xxxx..." oninput="saveToken()">
-        <span class="status" id="tokenStatus"></span>
-        <button class="btn btn--sm" onclick="testToken()" style="margin-top:0.25rem;">Test tokenu</button>
-        <hr style="border:0;border-top:1px solid #333;margin:0.75rem 0;">
-        <label>Změnit heslo</label>
-        <input type="password" id="newPassword" placeholder="Nové heslo">
-        <button class="btn btn--sm" onclick="changePassword()">Uložit nové heslo</button>
+        <p>Správa je chráněná přihlášením. Publikování změn a nahrávání souborů zatím není připojené; žádný GitHub token do prohlížeče nezadávejte.</p>
     </div>
 
     <div class="tabs">
@@ -214,9 +197,8 @@
     <div class="tab-panel active" id="panel-gallery">
 
         <!-- Upload zone -->
-        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
-            <p class="upload-zone__text"><strong>Přetáhněte fotky nebo videa sem</strong> nebo klikněte pro výběr<br>JPG, PNG, WebP — max 5 MB • MP4, WebM, MOV — max 25 MB</p>
-            <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple onchange="handleFiles(this.files)">
+        <div class="upload-zone" id="uploadZone" aria-disabled="true" style="cursor:default;opacity:0.6;">
+            <p class="upload-zone__text"><strong>Nahrávání souborů zatím není připojené.</strong><br>Galerii si můžeš prohlédnout, změny zatím nelze publikovat.</p>
         </div>
         <div class="upload-progress" id="uploadProgress"></div>
 
@@ -361,71 +343,13 @@
     </div>
 
     <script>
-        // ===================== AUTH =====================
-        // Password is stored as SHA-256 hash in localStorage.
-        // Default password on first use: "geeandgeesus"
-        const DEFAULT_HASH = '8a0b3e9a6a5b3e1f2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6'; // placeholder
-
-        async function hashPassword(pw) {
-            const encoded = new TextEncoder().encode(pw);
-            const buf = await crypto.subtle.digest('SHA-256', encoded);
-            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        // Authentication is enforced server-side before this page is served.
+        async function doLogout() {
+            await fetch('/api/admin/logout', { method: 'POST' });
+            location.href = '/admin/login';
         }
-
-        async function getStoredHash() {
-            let h = localStorage.getItem('gg_admin_hash');
-            if (!h) {
-                // First time — set default password "geeandgeesus"
-                h = await hashPassword('geeandgeesus');
-                localStorage.setItem('gg_admin_hash', h);
-            }
-            return h;
-        }
-
-        async function doLogin() {
-            const pw = document.getElementById('loginPassword').value;
-            if (!pw) return;
-            const hash = await hashPassword(pw);
-            const stored = await getStoredHash();
-            if (hash === stored) {
-                sessionStorage.setItem('gg_admin_auth', 'true');
-                showAdmin();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginPassword').focus();
-            }
-        }
-
-        function doLogout() {
-            sessionStorage.removeItem('gg_admin_auth');
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginError').style.display = 'none';
-        }
-
-        function showAdmin() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-        }
-
-        async function changePassword() {
-            const newPw = document.getElementById('newPassword').value;
-            if (!newPw || newPw.length < 4) { toast('Heslo musí mít alespoň 4 znaky'); return; }
-            const hash = await hashPassword(newPw);
-            localStorage.setItem('gg_admin_hash', hash);
-            document.getElementById('newPassword').value = '';
-            toast('Heslo změněno!');
-        }
-
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('is-open');
-        }
-
-        // Check session on load
-        if (sessionStorage.getItem('gg_admin_auth') === 'true') {
-            showAdmin();
         }
     </script>
 
@@ -700,59 +624,9 @@
         }
         function esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
-        // ===================== DEPLOY =====================
-        function getToken() { return localStorage.getItem('gg_gh_token') || ''; }
-        function saveToken() {
-            const val = document.getElementById('tokenInput').value.trim();
-            if (val) localStorage.setItem('gg_gh_token', val);
-            updateTokenStatus();
-        }
-        function updateTokenStatus() {
-            const token = getToken();
-            const el = document.getElementById('tokenStatus');
-            const btn = document.getElementById('deployBtn');
-            if (token) { el.textContent = 'Token uložen'; el.className = 'status status--ok'; btn.disabled = false; }
-            else { el.textContent = 'Zadej token'; el.className = 'status status--none'; btn.disabled = true; }
-        }
-        (function() { const s = getToken(); if (s) document.getElementById('tokenInput').value = s; updateTokenStatus(); })();
-
-        async function testToken() {
-            const token = getToken();
-            if (!token) { toast('Zadej GitHub token'); return; }
-            const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, { headers: { 'Authorization': `token ${token}` } });
-            if (res.ok) { toast('Token funguje!'); document.getElementById('tokenStatus').textContent = 'Ověřen'; document.getElementById('tokenStatus').className = 'status status--ok'; }
-            else { toast('Token nefunguje'); document.getElementById('tokenStatus').className = 'status status--none'; }
-        }
-
-        async function pushFile(path, data, msg) {
-            const token = getToken();
-            const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, { headers: { 'Authorization': `token ${token}` } });
-            if (!getRes.ok) throw new Error('Nelze načíst ' + path);
-            const file = await getRes.json();
-            const encoded = btoa(unescape(encodeURIComponent(data)));
-            const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
-                method: 'PUT',
-                headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: msg, content: encoded, sha: file.sha })
-            });
-            if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message); }
-        }
-
+        // Publishing requires a server-side integration; browser tokens are not accepted.
         async function deployAll() {
-            const token = getToken();
-            if (!token) { toast('Zadej token'); return; }
-            const btn = document.getElementById('deployBtn');
-            btn.disabled = true; btn.textContent = 'Publikuji...';
-            try {
-                await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery');
-                await pushFile('public/content.json', JSON.stringify(content, null, 2) + '\n', 'admin: update content');
-                toast('Vše publikováno! Web se aktualizuje za ~30s.');
-                btn.textContent = 'Publikováno!';
-                setTimeout(() => { btn.textContent = 'Publikovat vše na web'; btn.disabled = false; }, 3000);
-            } catch (e) {
-                toast('Chyba: ' + e.message);
-                btn.textContent = 'Publikovat vše na web'; btn.disabled = false;
-            }
+            toast('Publikování zatím není připojené.');
         }
 
         // ===================== PHOTO UPLOAD =====================
@@ -763,99 +637,8 @@
             if (files.length) handleFiles(files);
         }
 
-        async function handleFiles(fileList) {
-            const token = getToken();
-            if (!token) { toast('Nastav GitHub token v Nastavení pro nahrávání fotek'); toggleSettings(); return; }
-
-            const files = Array.from(fileList).filter(f => {
-                if (f.type.startsWith('image/') || f.type.startsWith('video/')) return true;
-                return /\.(jpe?g|png|webp|mp4|webm|mov)$/i.test(f.name);
-            });
-            if (!files.length) { toast('Vyberte fotky nebo videa'); return; }
-
-            const progress = document.getElementById('uploadProgress');
-            progress.innerHTML = '';
-
-            let okCount = 0;
-            const errors = [];
-            for (const file of files) {
-                const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|mov)$/i.test(file.name);
-                const maxSize = isVideo ? 25 * 1024 * 1024 : 5 * 1024 * 1024;
-                if (file.size > maxSize) {
-                    const msg = isVideo ? 'Příliš velké (max 25 MB)' : 'Příliš velký (max 5 MB)';
-                    addUploadItem(progress, file.name, null, 'error', msg);
-                    errors.push(`${file.name}: ${msg}`);
-                    continue;
-                }
-
-                // Clean filename
-                const cleanName = file.name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9._-]/g, '-')
-                    .replace(/-+/g, '-')
-                    .replace(/^-|-$/g, '');
-                const imgPath = `public/img/${cleanName}`;
-                const thumbUrl = URL.createObjectURL(file);
-
-                const item = addUploadItem(progress, cleanName, thumbUrl, 'uploading', 'Nahrávám...');
-
-                try {
-                    // Convert to base64
-                    const base64 = await fileToBase64(file);
-
-                    // Check if file exists
-                    let sha = null;
-                    try {
-                        const check = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${imgPath}`, {
-                            headers: { 'Authorization': `token ${token}` }
-                        });
-                        if (check.ok) {
-                            const existing = await check.json();
-                            sha = existing.sha;
-                        }
-                    } catch (e) { /* file doesn't exist, that's fine */ }
-
-                    // Upload to GitHub
-                    const body = {
-                        message: `admin: upload ${cleanName}`,
-                        content: base64,
-                    };
-                    if (sha) body.sha = sha;
-
-                    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${imgPath}`, {
-                        method: 'PUT',
-                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify(body)
-                    });
-
-                    if (!res.ok) { const t = await res.text(); throw new Error(`${res.status}: ${t.slice(0,80)}`); }
-
-                    // Add to gallery.json (hidden by default)
-                    const src = `img/${cleanName}`;
-                    if (!photos.find(p => p.src === src)) {
-                        photos.push({ src, alt: cleanName.replace(/\.[^.]+$/, '').replace(/-/g, ' '), wide: false, visible: false });
-                    }
-
-                    updateUploadItem(item, 'done', 'Nahráno!');
-                    okCount++;
-                } catch (e) {
-                    updateUploadItem(item, 'error', e.message || 'Chyba');
-                    errors.push(`${file.name}: ${e.message || 'Chyba'}`);
-                }
-            }
-
-            // Save updated gallery.json
-            let galleryErr = null;
-            if (okCount > 0) {
-                try {
-                    await pushFile('public/gallery.json', JSON.stringify({ gallery: photos }, null, 2) + '\n', 'admin: update gallery after upload');
-                    renderGallery();
-                    renderHeroPicker();
-                } catch (e) {
-                    galleryErr = e.message || 'neznámá chyba';
-                }
-            }
-            showUploadResult(okCount, errors, galleryErr);
+        async function handleFiles() {
+            toast('Nahrávání souborů zatím není připojené.');
         }
 
         function fileToBase64(file) {
